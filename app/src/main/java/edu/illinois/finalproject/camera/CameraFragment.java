@@ -1,22 +1,27 @@
 package edu.illinois.finalproject.camera;
 
+
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
@@ -26,16 +31,14 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  *
  */
-public class CameraFragment extends Fragment {
-    // app defined constant to determine the permission that was requested
-    public static final int PERMISSIONS_ALL = 1;
-
+public class CameraFragment extends Fragment implements TextureView.SurfaceTextureListener {
     // extension of the saved picture
     public static final String PHOTO_EXTENSION = ".jpg";
     // the format of the date that will be used to give the saved picture a name
     public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
-    private Camera camera;
+    private TextureView mTextureView;
+    private Camera mCamera;
 
     /**
      * Picture Callback object the camera will use when taking a photo. When a picture is taken,
@@ -71,23 +74,26 @@ public class CameraFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        askForPermissions();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
+
+        mTextureView = (TextureView) view.findViewById(R.id.camera_view);
+        mTextureView.setSurfaceTextureListener(this);
 
         Button captureButton = (Button) view.findViewById(R.id.take_reset_picture);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                camera.takePicture(null, null, pictureCallback);
+                mCamera.takePicture(null, null, pictureCallback);
             }
         });
 
@@ -95,33 +101,46 @@ public class CameraFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // if camera permission granted, start camera
-        int cameraPermissionCheck = ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.CAMERA);
-        if (cameraPermissionCheck == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+        mCamera = getCameraInstance();
+        if (mCamera == null) {
+            return;
         }
+
+        // make camera portrait mode
+        final int ANGLE = 90;
+        mCamera.setDisplayOrientation(ANGLE);
+
+        Camera.Parameters params = mCamera.getParameters();
+        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+
+        mCamera.setParameters(params);
+
+        try {
+            mCamera.setPreviewTexture(surfaceTexture);
+        } catch (IOException t) {
+            // don't need extra functionality
+        }
+
+        mCamera.startPreview();
+        //mTextureView.setAlpha(1.0f);
     }
 
-    /**
-     * This is called when a permission has been granted or denied. If the camera permission has
-     * been accepted, start the camera.
-     *
-     * @param requestCode the app defined code that will identify which permission has feedback
-     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[],
-                                           int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_ALL:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startCamera();
-                }
-        }
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+        // need to implement but don't need functionality
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        mCamera.stopPreview();
+        mCamera.release();
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+        // need to implement but don't need functionality
     }
 
     /**
@@ -138,53 +157,5 @@ public class CameraFragment extends Fragment {
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
-    }
-
-    /**
-     * Starts the camera by getting a camera instance and displaying the camera's image to the
-     * layout.
-     */
-    private void startCamera() {
-        // Create an instance of Camera
-        camera = getCameraInstance();
-
-        // Create our Preview view and set it as the content of our activity.
-        CameraView mPreview = new CameraView(getContext(), camera);
-        FrameLayout preview = (FrameLayout) (getActivity().findViewById(R.id.camera_view));
-        preview.addView(mPreview);
-    }
-
-    /**
-     * Asks for the permissions that this apps needs: camera, writing external storage, and
-     * accessing location data
-     */
-    private void askForPermissions() {
-        String[] permissionsToAsk = {
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-
-        if(!hasPermissions(permissionsToAsk)){
-            ActivityCompat.requestPermissions(getActivity(), permissionsToAsk, PERMISSIONS_ALL);
-        }
-    }
-
-    /**
-     * Checks to see if application has a list of permissions. If not, the app will request them.
-     * Source: https://stackoverflow.com/questions/34342816/android-6-0-multiple-permissions
-     * @param permissions the list of permissions to check
-     * @return false if one permissions is not granted. true if all permissions are granted
-     */
-    public boolean hasPermissions(String... permissions) {
-        if (permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

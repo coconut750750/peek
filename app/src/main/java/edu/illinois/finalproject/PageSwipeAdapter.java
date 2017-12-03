@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import edu.illinois.finalproject.camera.CameraFragment;
 import edu.illinois.finalproject.map.MapFragment;
+import edu.illinois.finalproject.profile.ProfileFragment;
 
 /***
  * Created by Brandon on 12/2/17.
@@ -27,9 +28,11 @@ public class PageSwipeAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new CameraFragment();
-            case 1:
                 return new MapFragment();
+            case 1:
+                return new CameraFragment();
+            case 2:
+                return new ProfileFragment();
             default:
                 return null;
         }
@@ -37,6 +40,6 @@ public class PageSwipeAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
