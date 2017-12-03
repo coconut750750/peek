@@ -102,7 +102,7 @@ public class CameraFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCamera = getCameraInstance();
-        mTextureListener = new CameraTextureListener(mCamera, mTextureView, mFrameLayout);
+        mTextureListener = new CameraTextureListener(mCamera, mFrameLayout);
 
         mTextureView.setSurfaceTextureListener(mTextureListener);
         if (mTextureView.isAvailable()) {

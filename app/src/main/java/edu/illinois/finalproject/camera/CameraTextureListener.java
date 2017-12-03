@@ -5,11 +5,8 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.TextureView;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,30 +18,27 @@ import java.util.List;
 public class CameraTextureListener implements TextureView.SurfaceTextureListener {
 
     private Camera mCamera;
-    private TextureView mTextureView;
     private FrameLayout mFrameLayout;
 
-    public CameraTextureListener(Camera camera, TextureView textureView, FrameLayout frameLayout) {
+    public CameraTextureListener(Camera camera, FrameLayout frameLayout) {
         mCamera = camera;
-        mTextureView = textureView;
         mFrameLayout = frameLayout;
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        //Log.d("asdf", "onSurfaceTextureAvailable: surface texture available");
         displayCamera(surfaceTexture);
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-        // need to implement but don't need functionality
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         releaseCamera();
         return true;
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+        // need to implement but don't need functionality
     }
 
     @Override
@@ -62,10 +56,11 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         mCamera.setDisplayOrientation(ANGLE);
 
         Camera.Parameters params = mCamera.getParameters();
+
         params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 
         Camera.Size optimalSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(),
-                mTextureView.getMeasuredWidth(), mTextureView.getMeasuredHeight());
+                mFrameLayout.getMeasuredWidth(), mFrameLayout.getMeasuredHeight());
         params.setPreviewSize(optimalSize.width, optimalSize.height);
 
         mCamera.setParameters(params);
@@ -102,6 +97,11 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         return optimalSize;
     }
 
+    /**
+     * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-camera-selected-ratio
+     * @param width
+     * @param height
+     */
     private void updateFrameLayout(int width, int height) {
         float previewProportion = (float) width / (float) height;
 
@@ -111,22 +111,18 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
                 .getHeight();
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
-        Log.d("preview prop", "w: "+width +" h: "+height+" prop: "+(double)width/height);
-
-        // Get the SurfaceView layout parameters
         ViewPager.LayoutParams lp = (ViewPager.LayoutParams)mFrameLayout.getLayoutParams();
 
         if (previewProportion < screenProportion) {
+            // if the preview ratio is less than the screen ratio, it means the width of the
+            // preview is smaller than the screen's, so, set the screen width to the preview width
+            // and calculate a new screen height
             lp.width = screenWidth;
             lp.height = (int) ((float) screenWidth / previewProportion);
         } else {
             lp.width = (int) (previewProportion * (float) screenHeight);
             lp.height = screenHeight;
         }
-
-        Log.d("frame layout prop first", "w: "+lp.width +" h: "+lp.height+" prop: "+(double)lp.width/lp.height);
-
-        Log.d("frame layout prop", "w: "+lp.width +" h: "+lp.height+" prop: "+(double)lp.width/lp.height);
 
         mFrameLayout.setLayoutParams(lp);
     }
