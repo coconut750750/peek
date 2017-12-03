@@ -143,7 +143,6 @@ public class CapturedImageActivity extends AppCompatActivity implements
                     lat, lon));
             gMap.setMyLocationEnabled(true); // displays current location
             populateMap(photoCoord);
-
         }
     }
 

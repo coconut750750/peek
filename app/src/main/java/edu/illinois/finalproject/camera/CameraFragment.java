@@ -1,46 +1,39 @@
 package edu.illinois.finalproject.camera;
 
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- *
+ * http://www.tutorialspoint.com/android/android_textureview.htm
  */
-public class CameraFragment extends Fragment implements TextureView.SurfaceTextureListener {
+public class CameraFragment extends Fragment {
     // extension of the saved picture
     public static final String PHOTO_EXTENSION = ".jpg";
     // the format of the date that will be used to give the saved picture a name
     public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
     private TextureView mTextureView;
+    private CameraTextureListener mTextureListener;
     private Camera mCamera;
 
     /**
@@ -88,8 +81,11 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
+        mCamera = getCameraInstance();
+        mTextureListener = new CameraTextureListener(mCamera);
+
         mTextureView = (TextureView) view.findViewById(R.id.camera_view);
-        mTextureView.setSurfaceTextureListener(this);
+        mTextureView.setSurfaceTextureListener(mTextureListener);
 
         Button captureButton = (Button) view.findViewById(R.id.take_reset_picture);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -106,32 +102,8 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
     public void onResume() {
         super.onResume();
         if (mTextureView.isAvailable()) {
-            displayCamera(mTextureView.getSurfaceTexture());
+            mTextureListener.displayCamera(mTextureView.getSurfaceTexture());
         }
-    }
-
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        //Log.d("asdf", "onSurfaceTextureAvailable: surface texture available");
-        displayCamera(surfaceTexture);
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-        // need to implement but don't need functionality
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        mCamera.stopPreview();
-        mCamera.release();
-        mCamera = null;
-        return true;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        // need to implement but don't need functionality
     }
 
     /**
@@ -148,30 +120,6 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
-    }
-
-    public void displayCamera(SurfaceTexture surfaceTexture) {
-        mCamera = getCameraInstance();
-        if (mCamera == null) {
-            return;
-        }
-
-        // make camera portrait mode
-        final int ANGLE = 90;
-        mCamera.setDisplayOrientation(ANGLE);
-
-        Camera.Parameters params = mCamera.getParameters();
-        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-
-        mCamera.setParameters(params);
-
-        try {
-            mCamera.setPreviewTexture(surfaceTexture);
-        } catch (IOException t) {
-            // don't need extra functionality
-        }
-
-        mCamera.startPreview();
     }
 
     /**
