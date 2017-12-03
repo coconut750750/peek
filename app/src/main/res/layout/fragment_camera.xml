@@ -1,15 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.illinois.finalproject.camera.CameraFragment">
+    tools:context="edu.illinois.finalproject.camera.CameraFragment"
+    android:id="@+id/camera_frame_layout">
 
     <TextureView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_gravity="center" />
 
     <Button
         android:id="@+id/take_reset_picture"
@@ -17,7 +17,6 @@
         android:layout_height="84dp"
         android:layout_width="84dp"
         android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"/>
+        android:layout_gravity="center_horizontal|bottom"/>
 
-</RelativeLayout>
+</FrameLayout>

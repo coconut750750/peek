@@ -6,12 +6,15 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +35,7 @@ public class CameraFragment extends Fragment {
     // the format of the date that will be used to give the saved picture a name
     public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
+    private FrameLayout mFrameLayout;
     private TextureView mTextureView;
     private CameraTextureListener mTextureListener;
     private Camera mCamera;
@@ -80,12 +84,8 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
-
-        mCamera = getCameraInstance();
-        mTextureListener = new CameraTextureListener(mCamera);
-
         mTextureView = (TextureView) view.findViewById(R.id.camera_view);
-        mTextureView.setSurfaceTextureListener(mTextureListener);
+        mFrameLayout = (FrameLayout) view.findViewById(R.id.camera_frame_layout);
 
         Button captureButton = (Button) view.findViewById(R.id.take_reset_picture);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +101,19 @@ public class CameraFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mCamera = getCameraInstance();
+        mTextureListener = new CameraTextureListener(mCamera, mTextureView, mFrameLayout);
+
+        mTextureView.setSurfaceTextureListener(mTextureListener);
         if (mTextureView.isAvailable()) {
             mTextureListener.displayCamera(mTextureView.getSurfaceTexture());
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mTextureListener.releaseCamera();
     }
 
     /**
