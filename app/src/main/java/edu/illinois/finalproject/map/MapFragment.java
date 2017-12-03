@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
+
+import static edu.illinois.finalproject.camera.CapturedImageActivity.DEFAULT_ZOOM;
 
 /**
  *
@@ -51,8 +54,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
-
-        startMap(savedInstanceState);
     }
 
     @Override
@@ -60,6 +61,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mapView = (MapView) view.findViewById(R.id.map);
+
+        startMap(savedInstanceState);
 
         return view;
     }
@@ -83,6 +86,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
             // shows where the user is currently
             // https://developers.google.com/maps/documentation/android-api/map-with-marker
             gMap.setMyLocationEnabled(true); // displays current location
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
         }
     }
 
