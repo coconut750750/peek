@@ -2,12 +2,14 @@ package edu.illinois.finalproject.camera;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -26,6 +28,7 @@ import java.util.Locale;
 
 import edu.illinois.finalproject.R;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -66,14 +69,13 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
             }
 
             // moves to the next activity, the photo detail activity
-            //startCapturedImageActivity(photoPath);
+            startCapturedImageActivity(photoPath);
         }
     };
 
     public CameraFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,29 +103,17 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mTextureView.isAvailable()) {
+            displayCamera(mTextureView.getSurfaceTexture());
+        }
+    }
+
+    @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        mCamera = getCameraInstance();
-        if (mCamera == null) {
-            return;
-        }
-
-        // make camera portrait mode
-        final int ANGLE = 90;
-        mCamera.setDisplayOrientation(ANGLE);
-
-        Camera.Parameters params = mCamera.getParameters();
-        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-
-        mCamera.setParameters(params);
-
-        try {
-            mCamera.setPreviewTexture(surfaceTexture);
-        } catch (IOException t) {
-            // don't need extra functionality
-        }
-
-        mCamera.startPreview();
-        //mTextureView.setAlpha(1.0f);
+        //Log.d("asdf", "onSurfaceTextureAvailable: surface texture available");
+        displayCamera(surfaceTexture);
     }
 
     @Override
@@ -135,6 +125,7 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         mCamera.stopPreview();
         mCamera.release();
+        mCamera = null;
         return true;
     }
 
@@ -157,5 +148,41 @@ public class CameraFragment extends Fragment implements TextureView.SurfaceTextu
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
+    }
+
+    public void displayCamera(SurfaceTexture surfaceTexture) {
+        mCamera = getCameraInstance();
+        if (mCamera == null) {
+            return;
+        }
+
+        // make camera portrait mode
+        final int ANGLE = 90;
+        mCamera.setDisplayOrientation(ANGLE);
+
+        Camera.Parameters params = mCamera.getParameters();
+        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+
+        mCamera.setParameters(params);
+
+        try {
+            mCamera.setPreviewTexture(surfaceTexture);
+        } catch (IOException t) {
+            // don't need extra functionality
+        }
+
+        mCamera.startPreview();
+    }
+
+    /**
+     * Starts the captured image activity given a photo name.
+     *
+     * @param photoName the name of the saved photo that was captured
+     */
+    private void startCapturedImageActivity(String photoName) {
+        Intent pictureIntent = new Intent(getContext(), CapturedImageActivity.class);
+        pictureIntent.putExtra(CapturedImageActivity.CAPTURED_PHOTO_NAME, photoName);
+        startActivity(pictureIntent);
+        getActivity().overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
     }
 }
