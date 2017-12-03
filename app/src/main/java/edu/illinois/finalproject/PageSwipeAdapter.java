@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import edu.illinois.finalproject.page.fragments.CameraFragment;
-import edu.illinois.finalproject.page.fragments.MapFragment;
+import edu.illinois.finalproject.camera.CameraFragment;
+import edu.illinois.finalproject.map.MapFragment;
 
 /***
  * Created by Brandon on 12/2/17.

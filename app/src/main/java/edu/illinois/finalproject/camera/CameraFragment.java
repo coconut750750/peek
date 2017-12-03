@@ -1,21 +1,17 @@
-package edu.illinois.finalproject.page.fragments;
+package edu.illinois.finalproject.camera;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import edu.illinois.finalproject.CameraView;
 import edu.illinois.finalproject.R;
 
 import static android.content.Context.MODE_PRIVATE;

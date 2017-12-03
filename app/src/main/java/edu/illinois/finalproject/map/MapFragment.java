@@ -1,4 +1,4 @@
-package edu.illinois.finalproject.page.fragments;
+package edu.illinois.finalproject.map;
 
 import android.content.Context;
 import android.net.Uri;

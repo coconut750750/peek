@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.camera;
 
 import android.content.Context;
 import android.hardware.Camera;
