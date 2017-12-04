@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.illinois.finalproject.camera.CapturedImageActivity"
+    tools:context="edu.illinois.finalproject.upload.CapturedImageActivity"
     android:weightSum="2"
     android:orientation="vertical">
 

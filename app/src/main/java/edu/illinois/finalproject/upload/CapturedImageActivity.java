@@ -1,4 +1,4 @@
-package edu.illinois.finalproject.camera;
+package edu.illinois.finalproject.upload;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,9 +12,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -55,20 +58,7 @@ public class CapturedImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captured_image);
 
-        setTitle("Confirm Location");
-
-        //toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.BLACK);
-
-        setSupportActionBar(toolbar);
-
-        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setupToolbar();
 
         capturedImageView = (ImageView) findViewById(R.id.captured_image);
 
@@ -147,13 +137,41 @@ public class CapturedImageActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    /**
+     * https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar-android
+     */
+    public void setupToolbar() {
+        setTitle("Confirm Location");
+
+        int textColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(textColor);
+        setSupportActionBar(toolbar);
+
+        final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.upload_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
-                // if this doesn't work as desired, another possibility is to call `finish()` here.
-                this.onBackPressed();
+                onBackPressed();
+                return true;
+            case R.id.action_next:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

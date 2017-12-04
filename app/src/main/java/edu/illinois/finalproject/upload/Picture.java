@@ -1,12 +1,11 @@
-package edu.illinois.finalproject.camera;
+package edu.illinois.finalproject.upload;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-/**
+/***
  * Created by Brandon on 12/3/17.
  */
 
