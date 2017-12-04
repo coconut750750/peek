@@ -30,9 +30,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-import edu.illinois.finalproject.clarifai.ClarifaiAsync;
-import edu.illinois.finalproject.clarifai.ClarifaiManager;
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 
 /**
  * This activity shows the user details about the photo they just took. It will display a map
@@ -53,6 +52,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private UploadLocationFragment locationFragment;
     private AddTagFragment tagFragment;
+    private TagsAdapter tagsAdapter;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -123,13 +123,18 @@ public class UploadActivity extends AppCompatActivity {
                     });
         }
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        capturedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] imageData = stream.toByteArray();
+        tagsAdapter = new TagsAdapter();
+        ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
+        clarifaiAsync.execute(capturedBitmap);
+
         locationFragment = new UploadLocationFragment();
-        tagFragment = AddTagFragment.newInstance(imageData);
+        tagFragment = new AddTagFragment();
 
         commitFragment(locationFragment);
+    }
+
+    public TagsAdapter getTagsAdapter() {
+        return tagsAdapter;
     }
 
     /**

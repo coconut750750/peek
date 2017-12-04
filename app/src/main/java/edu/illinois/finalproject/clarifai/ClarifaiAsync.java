@@ -2,7 +2,6 @@ package edu.illinois.finalproject.clarifai;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +19,7 @@ import edu.illinois.finalproject.upload.TagsAdapter;
  * Created by Brandon on 12/4/17.
  */
 
-public class ClarifaiAsync extends AsyncTask<byte[], Integer, String[]> {
+public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
 
     private static ClarifaiClient client= new ClarifaiBuilder(ClarifaiApiKey.KEY).buildSync();
     private TagsAdapter adapter;
@@ -30,33 +29,33 @@ public class ClarifaiAsync extends AsyncTask<byte[], Integer, String[]> {
     }
 
     @Override
-    protected String[] doInBackground(byte[]... bytes) {
-        if (bytes == null) {
+    protected List<String> doInBackground(Bitmap... bitmaps) {
+        if (bitmaps == null) {
             return null;
         }
 
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageData = stream.toByteArray();
+
         List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels().generalModel()
-                .predict().withInputs(ClarifaiInput.forImage(bytes[0]))
+                .predict().withInputs(ClarifaiInput.forImage(imageData))
                 .executeSync()
                 .get();
 
 
         List<String> results = new ArrayList<>();
-        for (ClarifaiOutput<Concept> output : predictionResults) {
-            for (Concept concept : output.data()) {
-                results.add(concept.name());
-            }
+        for (Concept concept : predictionResults.get(0).data()) {
+            results.add(concept.name());
         }
 
-        return results.toArray(new String[results.size()]);
+        return results;
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
-        for(String s : strings) {
-            Log.d("asdf", s);
-        }
-        adapter.setTagsArray(strings);
+    protected void onPostExecute(List<String> results) {
+        Log.d("asdf", "onPostExecute: ");
+        adapter.setTagsList(results);
         adapter.notifyDataSetChanged();
     }
 }

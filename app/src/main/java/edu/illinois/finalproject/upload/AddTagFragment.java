@@ -17,8 +17,10 @@ import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 public class AddTagFragment extends Fragment {
     
     public static final String IMAGE_KEY = "tagsArray";
+    private TagsAdapter tagsAdapter;
 
     public AddTagFragment() {
+        tagsAdapter = new TagsAdapter();
         // Required empty public constructor
     }
 
@@ -54,15 +56,9 @@ public class AddTagFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-
-        byte[] imageData = getArguments().getByteArray(IMAGE_KEY);
-        TagsAdapter tagsAdapter = new TagsAdapter();
+        TagsAdapter tagsAdapter = ((UploadActivity) getActivity()).getTagsAdapter();
         mRecyclerView.setAdapter(tagsAdapter);
         tagsAdapter.notifyDataSetChanged();
-
-        // starts the async task
-        ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
-        clarifaiAsync.execute(imageData);
 
         return view;
     }
