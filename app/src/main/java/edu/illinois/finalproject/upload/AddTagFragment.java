@@ -1,7 +1,5 @@
 package edu.illinois.finalproject.upload;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,20 +8,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 
 /**
  *
  */
 public class AddTagFragment extends Fragment {
+    
+    public static final String IMAGE_KEY = "tagsArray";
 
     public AddTagFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param imageBytes
+     * @return A new instance of fragment test.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static AddTagFragment newInstance(byte[] imageBytes) {
+        AddTagFragment fragment = new AddTagFragment();
+        Bundle args = new Bundle();
+        args.putByteArray(IMAGE_KEY, imageBytes);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +54,15 @@ public class AddTagFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        List<String> tags = new ArrayList<>();
-        tags.add("beach");
-        tags.add("sand");
-        tags.add("sun");
-        TagsAdapter tagsAdapter = new TagsAdapter(tags);
+
+        byte[] imageData = getArguments().getByteArray(IMAGE_KEY);
+        TagsAdapter tagsAdapter = new TagsAdapter();
         mRecyclerView.setAdapter(tagsAdapter);
         tagsAdapter.notifyDataSetChanged();
+
+        // starts the async task
+        ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
+        clarifaiAsync.execute(imageData);
 
         return view;
     }

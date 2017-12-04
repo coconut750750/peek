@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 import edu.illinois.finalproject.R;
 
 /**
@@ -17,10 +15,9 @@ import edu.illinois.finalproject.R;
 
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
-    List<String> tags;
+    private String[] tags;
 
-    public TagsAdapter(List<String> tags) {
-        this.tags = tags;
+    public TagsAdapter() {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,11 +41,25 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(TagsAdapter.ViewHolder holder, int position) {
         TextView textView = holder.textView;
-        textView.setText(tags.get(position));
+        textView.setText(tags[position]);
     }
 
     @Override
     public int getItemCount() {
-        return tags.size();
+        if (tags == null) {
+            return 0;
+        }
+        return tags.length;
+    }
+
+    /**
+     *
+     * @param tags
+     */
+    public void setTagsArray(String[] tags) {
+        if (tags == null) {
+            return;
+        }
+        this.tags = tags;
     }
 }

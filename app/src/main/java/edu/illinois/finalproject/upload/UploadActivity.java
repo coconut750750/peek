@@ -27,8 +27,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import edu.illinois.finalproject.clarifai.ClarifaiAsync;
+import edu.illinois.finalproject.clarifai.ClarifaiManager;
 import edu.illinois.finalproject.R;
 
 /**
@@ -120,8 +123,12 @@ public class UploadActivity extends AppCompatActivity {
                     });
         }
 
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        capturedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageData = stream.toByteArray();
         locationFragment = new UploadLocationFragment();
-        tagFragment = new AddTagFragment();
+        tagFragment = AddTagFragment.newInstance(imageData);
+
         commitFragment(locationFragment);
     }
 
