@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.camera;
 
 import com.google.android.gms.maps.model.LatLng;
 

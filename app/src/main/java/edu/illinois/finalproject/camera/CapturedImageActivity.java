@@ -1,20 +1,29 @@
 package edu.illinois.finalproject.camera;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,12 +40,8 @@ public class CapturedImageActivity extends AppCompatActivity {
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
 
-    private TextView locationTextView;
-    private GoogleApiClient googleApiClient;
     private Bitmap capturedBitmap;
-    private double lat;
-    private double lon;
-    private GoogleMap gMap;
+    ImageView capturedImageView;
 
     private MapManager mapManager;
 
@@ -50,17 +55,22 @@ public class CapturedImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captured_image);
 
-        // Adds the back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(getResources().getString(R.string.app_name));
-            // add back button
-            // https://stackoverflow.com/questions/15686555/display-back-button-on-action-bar
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        setTitle("Confirm Location");
 
-        ImageView capturedImageView = (ImageView) findViewById(R.id.captured_image);
-        locationTextView = (TextView) findViewById(R.id.coordinate_text);
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.BLACK);
+
+        setSupportActionBar(toolbar);
+
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        capturedImageView = (ImageView) findViewById(R.id.captured_image);
 
         Intent passedIntent = getIntent();
         String photoName = passedIntent.getStringExtra(CAPTURED_PHOTO_NAME);
@@ -71,7 +81,29 @@ public class CapturedImageActivity extends AppCompatActivity {
         // bitmap-from-sdcard-why-am-i-getting-a-nullpointerexc
         // need to rotate image 90 degrees because camera saves image in landscape mode by default
         capturedBitmap = rotateImage(BitmapFactory.decodeFile(photoPath));
-        capturedImageView.setImageBitmap(capturedBitmap);
+
+        // finds a cropped section of the picture to show the user
+        // source: https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
+        ViewTreeObserver vto = capturedImageView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                capturedImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                int width = capturedImageView.getMeasuredWidth();
+                int height = capturedImageView.getMeasuredHeight();
+
+                Bitmap croppedBitmap = Bitmap.createBitmap(
+                        capturedBitmap,
+                        0,
+                        (capturedBitmap.getHeight() - height) / 2,
+                        width,
+                        height
+                );
+
+                capturedImageView.setImageBitmap(croppedBitmap);
+
+            }
+        });
 
         // delete the file from SD card
         File photoFile = new File(photoPath);
@@ -80,6 +112,24 @@ public class CapturedImageActivity extends AppCompatActivity {
         MapView mapView = (MapView) findViewById(R.id.map);
         mapManager = new MapManager(this, mapView, new ArrayList<LatLng>(), true);
         mapManager.startMap(savedInstanceState);
+
+        // https://developer.android.com/training/location/retrieve-current.html
+        FusedLocationProviderClient mFusedLocationClient;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                LatLng photoCoord = new LatLng(location.getLatitude(), location.getLongitude());
+                            }
+                        }
+                    });
+        }
     }
 
     /**
@@ -97,14 +147,13 @@ public class CapturedImageActivity extends AppCompatActivity {
                 matrix, true);
     }
 
-    /**
-     * Adds the back button to the menu bar.
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                this.onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
