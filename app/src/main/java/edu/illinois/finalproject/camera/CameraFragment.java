@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.upload.CapturedImageActivity;
+import edu.illinois.finalproject.upload.UploadActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -135,8 +135,8 @@ public class CameraFragment extends Fragment {
      * @param photoName the name of the saved photo that was captured
      */
     private void startCapturedImageActivity(String photoName) {
-        Intent pictureIntent = new Intent(getContext(), CapturedImageActivity.class);
-        pictureIntent.putExtra(CapturedImageActivity.CAPTURED_PHOTO_NAME, photoName);
+        Intent pictureIntent = new Intent(getContext(), UploadActivity.class);
+        pictureIntent.putExtra(UploadActivity.CAPTURED_PHOTO_NAME, photoName);
         startActivity(pictureIntent);
         getActivity().overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
     }

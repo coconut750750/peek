@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-import static edu.illinois.finalproject.upload.CapturedImageActivity.DEFAULT_ZOOM;
+import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
 /***
  * Created by Brandon on 12/3/17.

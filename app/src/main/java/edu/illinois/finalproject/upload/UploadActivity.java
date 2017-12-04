@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -13,7 +12,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -38,7 +36,7 @@ import edu.illinois.finalproject.map.MapManager;
  * This activity shows the user details about the photo they just took. It will display a map
  * with a marker at the location where the photo was taken and the actual photo itself.
  */
-public class CapturedImageActivity extends AppCompatActivity {
+public class UploadActivity extends AppCompatActivity {
 
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
@@ -56,7 +54,7 @@ public class CapturedImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_captured_image);
+        setContentView(R.layout.activity_upload);
 
         setupToolbar();
 
@@ -143,15 +141,12 @@ public class CapturedImageActivity extends AppCompatActivity {
     public void setupToolbar() {
         setTitle("Confirm Location");
 
-        int textColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
-
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(textColor);
         setSupportActionBar(toolbar);
 
-        final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        final Drawable backArrow = getResources().getDrawable(R.drawable.back_arrow);
+        getSupportActionBar().setHomeAsUpIndicator(backArrow);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -162,6 +157,15 @@ public class CapturedImageActivity extends AppCompatActivity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.upload_menu, menu);
+
+        MenuItem nextArrow = menu.findItem(R.id.action_next);
+
+        final Drawable nextArrowIcon = nextArrow.getIcon();
+        nextArrowIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
+                PorterDuff.Mode.SRC_ATOP);
+
+        nextArrow.setIcon(nextArrowIcon);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -170,6 +174,7 @@ public class CapturedImageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                finish();
                 return true;
             case R.id.action_next:
                 return true;

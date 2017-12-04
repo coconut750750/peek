@@ -24,16 +24,14 @@
             android:value="AIzaSyDHnAQFfJZp91uLhr9CnYsI_l6WCG0jjJ8"/>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".upload.CapturedImageActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        <activity android:name=".upload.UploadActivity">
 
         </activity>
     </application>

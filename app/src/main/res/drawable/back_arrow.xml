@@ -7,6 +7,6 @@
     android:autoMirrored="true"
     android:tint="?attr/colorControlNormal">
     <path
-        android:pathData="M20,11L7.8,11l5.6,-5.6L12,4l-8,8l8,8l1.4,-1.4L7.8,13L20,13L20,11z"
-        android:fillColor="@color/colorPrimaryDark"/>
+        android:pathData="M6.8,12 l6.6,-6.6 l-1.4,-1.4 l-8,8 l8,8 l1.4,-1.4 l-6.6,-6.6 l0,-2z"
+        android:fillColor="@color/colorAccent"/>
 </vector>
