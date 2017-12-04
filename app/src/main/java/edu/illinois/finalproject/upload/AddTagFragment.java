@@ -8,23 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
-
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.map.MapManager;
 
 /**
  *
  */
-public class UploadLocationFragment extends Fragment {
+public class AddTagFragment extends Fragment {
 
-    private MapManager mapManager;
-    private MapView mapView;
-
-    public UploadLocationFragment() {
+    public AddTagFragment() {
         // Required empty public constructor
     }
 
@@ -36,12 +27,8 @@ public class UploadLocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_upload_location, container, false);
-
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>(), true);
-        mapManager.startMap(savedInstanceState);
-
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_add_tag, container, false);
         return view;
     }
 }

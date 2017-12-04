@@ -21,19 +21,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.map.MapManager;
 
 /**
  * This activity shows the user details about the photo they just took. It will display a map
@@ -45,9 +41,15 @@ public class UploadActivity extends AppCompatActivity {
     public static final int DEFAULT_ZOOM = 15;
 
     private Bitmap capturedBitmap;
-    ImageView capturedImageView;
+    private ImageView capturedImageView;
+    private LatLng photoCoord;
 
-    private MapManager mapManager;
+    private int currentPage = 0;
+
+    private FragmentTransaction transaction;
+
+    private UploadLocationFragment locationFragment;
+    private AddTagFragment tagFragment;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -112,17 +114,15 @@ public class UploadActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                LatLng photoCoord = new LatLng(location.getLatitude(), location.getLongitude());
+                                photoCoord = new LatLng(location.getLatitude(), location.getLongitude());
                             }
                         }
                     });
         }
 
-        Fragment locationFragment = new UploadLocationFragment();
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, locationFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        locationFragment = new UploadLocationFragment();
+        tagFragment = new AddTagFragment();
+        commitFragment(locationFragment);
     }
 
     /**
@@ -138,6 +138,37 @@ public class UploadActivity extends AppCompatActivity {
         matrix.postRotate(ANGLE_OFFSET);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    public void onBackButtonPressed() {
+        switch (currentPage) {
+            case 0:
+                onBackPressed();
+                finish();
+                break;
+            case 1:
+                commitFragment(locationFragment);
+                break;
+        }
+
+        currentPage -= 1;
+    }
+
+    public void onNextButtonPressed() {
+        switch (currentPage) {
+            case 0:
+                commitFragment(tagFragment);
+                break;
+            case 1:
+                break;
+        }
+        currentPage += 1;
+    }
+
+    public void commitFragment(Fragment fragment) {
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
     /**
@@ -178,10 +209,10 @@ public class UploadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
-                finish();
+                onBackButtonPressed();
                 return true;
             case R.id.action_next:
+                onNextButtonPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
