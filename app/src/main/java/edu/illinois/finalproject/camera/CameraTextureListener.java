@@ -18,12 +18,10 @@ import java.util.List;
 public class CameraTextureListener implements TextureView.SurfaceTextureListener {
 
     private Camera mCamera;
-    private FrameLayout mFrameLayout;
     private TextureView mTextureView;
 
-    public CameraTextureListener(Camera camera, TextureView textureView, FrameLayout frameLayout) {
+    public CameraTextureListener(Camera camera, TextureView textureView) {
         mCamera = camera;
-        mFrameLayout = frameLayout;
         mTextureView = textureView;
     }
 
@@ -62,7 +60,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 
         Camera.Size optimalSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(),
-                mFrameLayout.getMeasuredWidth(), mFrameLayout.getMeasuredHeight());
+                mTextureView.getMeasuredWidth(), mTextureView.getMeasuredHeight());
         params.setPreviewSize(optimalSize.width, optimalSize.height);
 
         mCamera.setParameters(params);
@@ -107,17 +105,10 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         // must swap width and height because Camera default orientation is landscape
         int width = optimalSize.height;
         int height = optimalSize.width;
-
-        Log.d("asdf", "w: "+width+" h: "+height);
-
         float previewProportion = (float) width / (float) height;
 
         int screenWidth = mTextureView.getMeasuredWidth();
         int screenHeight = mTextureView.getMeasuredHeight();
-
-        Log.d("asdf", "w: "+screenWidth+" h: "+screenHeight);
-
-
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
         FrameLayout.LayoutParams mTextureViewLayoutParams =
@@ -133,9 +124,6 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
             mTextureViewLayoutParams.width = (int) (previewProportion * (float) screenHeight);
             mTextureViewLayoutParams.height = screenHeight;
         }
-
-        Log.d("asdf", "w: "+mTextureViewLayoutParams.width+" h: "+mTextureViewLayoutParams.height);
-
 
         mTextureView.setLayoutParams(mTextureViewLayoutParams);
     }

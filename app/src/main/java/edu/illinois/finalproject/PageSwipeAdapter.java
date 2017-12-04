@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.illinois.finalproject.camera.CameraFragment;
 import edu.illinois.finalproject.map.MapFragment;
 import edu.illinois.finalproject.profile.ProfileFragment;
@@ -14,8 +17,14 @@ import edu.illinois.finalproject.profile.ProfileFragment;
 
 public class PageSwipeAdapter extends FragmentStatePagerAdapter {
 
+    private List<Fragment> pageFragments;
+
     public PageSwipeAdapter(FragmentManager fm) {
         super(fm);
+        pageFragments = new ArrayList<>();
+        pageFragments.add(new MapFragment());
+        pageFragments.add(new CameraFragment());
+        pageFragments.add(new ProfileFragment());
     }
 
     /**
@@ -26,16 +35,7 @@ public class PageSwipeAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new MapFragment();
-            case 1:
-                return new CameraFragment();
-            case 2:
-                return new ProfileFragment();
-            default:
-                return null;
-        }
+        return pageFragments.get(position);
     }
 
     @Override
