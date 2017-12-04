@@ -19,10 +19,12 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
 
     private Camera mCamera;
     private FrameLayout mFrameLayout;
+    private TextureView mTextureView;
 
-    public CameraTextureListener(Camera camera, FrameLayout frameLayout) {
+    public CameraTextureListener(Camera camera, TextureView textureView, FrameLayout frameLayout) {
         mCamera = camera;
         mFrameLayout = frameLayout;
+        mTextureView = textureView;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
 
         mCamera.setParameters(params);
 
-        updateFrameLayout(optimalSize.width, optimalSize.height);
+        updateFrameLayout(optimalSize);
 
         try {
             mCamera.setPreviewTexture(surfaceTexture);
@@ -99,32 +101,43 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
 
     /**
      * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-camera-selected-ratio
-     * @param width
-     * @param height
+     * @param optimalSize
      */
-    private void updateFrameLayout(int width, int height) {
+    private void updateFrameLayout(Camera.Size optimalSize) {
+        // must swap width and height because Camera default orientation is landscape
+        int width = optimalSize.height;
+        int height = optimalSize.width;
+
+        Log.d("asdf", "w: "+width+" h: "+height);
+
         float previewProportion = (float) width / (float) height;
 
-        int screenWidth =  ((Activity)mFrameLayout.getContext()).getWindowManager().getDefaultDisplay()
-                .getWidth();
-        int screenHeight =    ((Activity)mFrameLayout.getContext()).getWindowManager().getDefaultDisplay()
-                .getHeight();
+        int screenWidth = mTextureView.getMeasuredWidth();
+        int screenHeight = mTextureView.getMeasuredHeight();
+
+        Log.d("asdf", "w: "+screenWidth+" h: "+screenHeight);
+
+
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
-        ViewPager.LayoutParams lp = (ViewPager.LayoutParams)mFrameLayout.getLayoutParams();
+        FrameLayout.LayoutParams mTextureViewLayoutParams =
+                (FrameLayout.LayoutParams)mTextureView.getLayoutParams();
 
         if (previewProportion < screenProportion) {
             // if the preview ratio is less than the screen ratio, it means the width of the
             // preview is smaller than the screen's, so, set the screen width to the preview width
             // and calculate a new screen height
-            lp.width = screenWidth;
-            lp.height = (int) ((float) screenWidth / previewProportion);
+            mTextureViewLayoutParams.width = screenWidth;
+            mTextureViewLayoutParams.height = (int) ((float) screenWidth / previewProportion);
         } else {
-            lp.width = (int) (previewProportion * (float) screenHeight);
-            lp.height = screenHeight;
+            mTextureViewLayoutParams.width = (int) (previewProportion * (float) screenHeight);
+            mTextureViewLayoutParams.height = screenHeight;
         }
 
-        mFrameLayout.setLayoutParams(lp);
+        Log.d("asdf", "w: "+mTextureViewLayoutParams.width+" h: "+mTextureViewLayoutParams.height);
+
+
+        mTextureView.setLayoutParams(mTextureViewLayoutParams);
     }
 
     public void releaseCamera() {
