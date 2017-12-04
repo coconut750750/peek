@@ -11,8 +11,10 @@ import edu.illinois.finalproject.camera.CameraFragment;
 import edu.illinois.finalproject.map.MapFragment;
 import edu.illinois.finalproject.profile.ProfileFragment;
 
-/***
- * Created by Brandon on 12/2/17.
+/**
+ * This is the adapter that the ViewPager (in the MainActivity) uses to control which Fragment is
+ * displayed to the user. Depending on the position of the adapter, the PageSwipeAdapter will return
+ * a certain Fragment.
  */
 
 public class PageSwipeAdapter extends FragmentStatePagerAdapter {

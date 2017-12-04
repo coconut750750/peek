@@ -24,7 +24,12 @@ import edu.illinois.finalproject.upload.UploadActivity;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * http://www.tutorialspoint.com/android/android_textureview.htm
+ * This is one of the main Fragments the user will see. It holds a Camera object as well as a
+ * TextureView, the view where the Camera's preview will be displayed. This Fragment has a
+ * CameraTextureListener object that draws the Camera's preview onto the TextureView.
+ *
+ * Source: http://www.tutorialspoint.com/android/android_textureview.htm
+ * I used this source to figure out how to use a TextureView to display a Camera.
  */
 public class CameraFragment extends Fragment {
     // extension of the saved picture
@@ -32,7 +37,6 @@ public class CameraFragment extends Fragment {
     // the format of the date that will be used to give the saved picture a name
     public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
-    private FrameLayout mFrameLayout;
     private TextureView mTextureView;
     private CameraTextureListener mTextureListener;
     private Camera mCamera;
@@ -76,13 +80,21 @@ public class CameraFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * When this Fragment is created, retrieve the views from the layout. Assign an OnClickListener
+     * to the button.
+     *
+     * @param inflater Object used to inflate the layout
+     * @param container the Container the Fragment will reside in
+     * @param savedInstanceState the saved state
+     * @return the view of the Fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
         mTextureView = (TextureView) view.findViewById(R.id.camera_view);
-        mFrameLayout = (FrameLayout) view.findViewById(R.id.camera_frame_layout);
 
         Button captureButton = (Button) view.findViewById(R.id.take_reset_picture);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +107,10 @@ public class CameraFragment extends Fragment {
         return view;
     }
 
+    /**
+     * When activity resumes, start up the Camera preview. If the TextureView is already available
+     * for use (happens when this Fragment was already created), immediately display the Camera.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -107,6 +123,9 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     * When Fragment is paused, release the Camera so other activities can use it.
+     */
     @Override
     public void onPause() {
         super.onPause();

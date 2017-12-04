@@ -6,6 +6,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * This is the main activity and users will see when using the app. It consists of three main
+ * Fragments that are controlled by a ViewPager. The three fragments are the map, camera, and
+ * profile fragment. The MainActivity is also in charge of asking the user for permissions.
+ */
 public class MainActivity extends AppCompatActivity {
     // app defined constant to determine the permission that was requested
     public static final int PERMISSIONS_ALL = 1;
@@ -48,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean hasPermissions(String... permissions) {
         if (permissions != null) {
             for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, permission) !=
+                        PackageManager.PERMISSION_GRANTED) {
                     return false;
                 }
             }

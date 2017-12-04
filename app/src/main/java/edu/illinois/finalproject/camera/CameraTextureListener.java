@@ -1,18 +1,16 @@
 package edu.illinois.finalproject.camera;
 
-import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
 import java.io.IOException;
 import java.util.List;
 
-/***
- * Created by Brandon on 12/3/17.
+/**
+ * This is the TextureListener object that the Camera Fragment uses. It projects the Camera preview
+ * onto the TextureView and allows the Camera to start its preview.
  */
 
 public class CameraTextureListener implements TextureView.SurfaceTextureListener {
@@ -46,6 +44,12 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         // need to implement but don't need functionality
     }
 
+    /**
+     * This method is called when the Surface (used to display the Camera preview) is available. It
+     * configures the Camera parameters to fit the full screen, then starts the preview.
+     *
+     * @param surfaceTexture the SurfaceTexture object the Camera will draw on
+     */
     public void displayCamera(SurfaceTexture surfaceTexture) {
         if (mCamera == null) {
             return;
@@ -57,15 +61,18 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
 
         Camera.Parameters params = mCamera.getParameters();
 
+        // let camera have access to auto focus mode
         params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 
+        // set the preview of the camera to the optimal size for the screen
         Camera.Size optimalSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(),
                 mTextureView.getMeasuredWidth(), mTextureView.getMeasuredHeight());
         params.setPreviewSize(optimalSize.width, optimalSize.height);
 
         mCamera.setParameters(params);
 
-        updateFrameLayout(optimalSize);
+        // updates the size of the view to avoid distortion
+        updateViewSize(optimalSize);
 
         try {
             mCamera.setPreviewTexture(surfaceTexture);
@@ -98,10 +105,18 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
     }
 
     /**
-     * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-camera-selected-ratio
+     * After finding out the optimal size for the Camera preview, the size of the TextureView must
+     * also be adjusted to further avoid distortion. This usually means the TextureView will
+     * acquire a width or height larger than the screen size since the available Camera aspect
+     * ratios will most likely differ from the screen aspect ratio.
+     *
+     * I found the method to achieve this here:
+     * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-
+     * camera-selected-ratio
+     *
      * @param optimalSize
      */
-    private void updateFrameLayout(Camera.Size optimalSize) {
+    private void updateViewSize(Camera.Size optimalSize) {
         // must swap width and height because Camera default orientation is landscape
         int width = optimalSize.height;
         int height = optimalSize.width;
@@ -112,17 +127,17 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
         FrameLayout.LayoutParams mTextureViewLayoutParams =
-                (FrameLayout.LayoutParams)mTextureView.getLayoutParams();
+                (FrameLayout.LayoutParams) mTextureView.getLayoutParams();
 
         if (previewProportion < screenProportion) {
             // if the preview ratio is less than the screen ratio, it means the width of the
-            // preview is smaller than the screen's, so, set the screen width to the preview width
-            // and calculate a new screen height
+            // preview is smaller than the screen's. So, set the screen width to the preview width
+            // and calculate a new screen height (usually larger than screen height)
             mTextureViewLayoutParams.width = screenWidth;
             mTextureViewLayoutParams.height = (int) ((float) screenWidth / previewProportion);
         } else {
-            mTextureViewLayoutParams.width = (int) (previewProportion * (float) screenHeight);
             mTextureViewLayoutParams.height = screenHeight;
+            mTextureViewLayoutParams.width = (int) (previewProportion * (float) screenHeight);
         }
 
         mTextureView.setLayoutParams(mTextureViewLayoutParams);
