@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -97,10 +100,6 @@ public class UploadActivity extends AppCompatActivity {
         File photoFile = new File(photoPath);
         photoFile.delete();
 
-        MapView mapView = (MapView) findViewById(R.id.map);
-        mapManager = new MapManager(this, mapView, new ArrayList<LatLng>(), true);
-        mapManager.startMap(savedInstanceState);
-
         // https://developer.android.com/training/location/retrieve-current.html
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -118,6 +117,12 @@ public class UploadActivity extends AppCompatActivity {
                         }
                     });
         }
+
+        Fragment locationFragment = new UploadLocationFragment();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, locationFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     /**
