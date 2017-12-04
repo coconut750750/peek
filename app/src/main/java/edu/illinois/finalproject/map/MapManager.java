@@ -35,11 +35,13 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     private double lon;
     private GoogleMap gMap;
     private List<LatLng> mapMarkers;
+    private boolean markCurrent;
 
-    public MapManager(Context context, MapView mapView, List<LatLng> markers) {
+    public MapManager(Context context, MapView mapView, List<LatLng> markers, boolean markCurrent) {
         this.context = context;
         this.mapView = mapView;
         mapMarkers = markers;
+        this.markCurrent = markCurrent;
 
         // create a google api client to access location
         // source: https://stackoverflow.com/questions/38242917/how-can-i-get-the-current-location-
@@ -71,6 +73,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
             // https://developers.google.com/maps/documentation/android-api/map-with-marker
             gMap.setMyLocationEnabled(true); // displays current location
             gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
+            populateMap();
         }
     }
 
@@ -100,15 +103,14 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         mapView.onResume();
     }
 
-    public GoogleMap getGMap() {
-        return gMap;
-    }
-
     /**
      * Populates the map with a marker at the given latitude and longitude. The title of the marker
      * will be "photo" but this will be changed to show the actual photo.
      */
     private void populateMap() {
+        if (markCurrent) {
+            gMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title("Photo"));
+        }
 
         for (LatLng photoCoord : mapMarkers) {
             gMap.addMarker(new MarkerOptions().position(photoCoord).title("Photo"));
