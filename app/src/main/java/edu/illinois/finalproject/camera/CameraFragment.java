@@ -10,7 +10,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -93,7 +92,7 @@ public class CameraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_camera, container, false);
+        View view = inflater.inflate(R.layout.page_camera, container, false);
         mTextureView = (TextureView) view.findViewById(R.id.camera_view);
 
         Button captureButton = (Button) view.findViewById(R.id.take_reset_picture);
