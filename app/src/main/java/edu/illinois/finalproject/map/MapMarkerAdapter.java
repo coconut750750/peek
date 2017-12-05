@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.HashMap;
+
 import edu.illinois.finalproject.R;
 
 /**
@@ -19,13 +21,12 @@ import edu.illinois.finalproject.R;
 
 public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
-    public static final String CURRENT_PIC = "current";
     private Context context;
-    private Bitmap uploadImage;
+    private Bitmap image;
 
-    public MapMarkerAdapter(Context context) {
+    public MapMarkerAdapter(Context context, Bitmap image) {
         this.context = context;
-        this.uploadImage = null;
+        this.image = image;
     }
 
     @Override
@@ -36,12 +37,10 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
         ImageView imageView = (ImageView) v.findViewById(R.id.map_info_image);
         TextView textView = (TextView) v.findViewById(R.id.map_info_coord);
 
-        String id = marker.getTitle();
-        if (CURRENT_PIC.equals(id)) {
-            //imageView.setImageBitmap(uploadImage);
-        }
-
         textView.setText(marker.getPosition().latitude + ", " + marker.getPosition().longitude);
+
+        imageView.setImageBitmap(image);
+        marker.getId();
         return v;
     }
 

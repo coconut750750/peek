@@ -107,12 +107,12 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      * will be "photo" but this will be changed to show the actual photo.
      */
     private void populateMap() {
-        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context);
-        gMap.setInfoWindowAdapter(mapMarkerAdapter);
+//        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context);
+//        gMap.setInfoWindowAdapter(mapMarkerAdapter);
 
-        double angle = 0.0;
-        double x = Math.sin(-angle * Math.PI / 180) * 0.5 + 0.5;
-        double y = -(Math.cos(-angle * Math.PI / 180) * 0.5 - 0.5);
+//        double angle = 0.0;
+//        double x = Math.sin(-angle * Math.PI / 180) * 0.5 + 0.5;
+//        double y = -(Math.cos(-angle * Math.PI / 180) * 0.5 - 0.5);
 
         for (LatLng photoCoord : mapMarkers) {
             gMap.addMarker(new MarkerOptions().position(photoCoord));
