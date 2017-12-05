@@ -83,29 +83,6 @@ public class UploadActivity extends AppCompatActivity {
         // need to rotate image 90 degrees because camera saves image in landscape mode by default
         capturedBitmap = rotateImage(BitmapFactory.decodeFile(photoPath));
 
-        // finds a cropped section of the picture to show the user
-        // source: https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
-        ViewTreeObserver vto = capturedImageView.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                capturedImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                int width = capturedImageView.getMeasuredWidth();
-                int height = capturedImageView.getMeasuredHeight();
-
-                Bitmap croppedBitmap = Bitmap.createBitmap(
-                        capturedBitmap,
-                        0,
-                        (capturedBitmap.getHeight() - height) / 2,
-                        width,
-                        height
-                );
-
-                capturedImageView.setImageBitmap(croppedBitmap);
-
-            }
-        });
-
         // delete the file from SD card
         File photoFile = new File(photoPath);
         photoFile.delete();
@@ -132,14 +109,18 @@ public class UploadActivity extends AppCompatActivity {
         ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
         clarifaiAsync.execute(capturedBitmap);
 
-        locationFragment = new UploadLocationFragment();
         tagFragment = new AddTagFragment();
+        locationFragment = new UploadLocationFragment();
 
-        commitFragment(locationFragment);
+        commitFragment(tagFragment);
     }
 
     public TagsAdapter getTagsAdapter() {
         return tagsAdapter;
+    }
+
+    public Bitmap getCapturedBitmap() {
+        return capturedBitmap;
     }
 
     /**
@@ -157,8 +138,6 @@ public class UploadActivity extends AppCompatActivity {
                 matrix, true);
     }
 
-
-
     public void commitFragment(Fragment fragment) {
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -172,8 +151,8 @@ public class UploadActivity extends AppCompatActivity {
                 finish();
                 break;
             case 1:
-                toolbarTitle.setText(getResources().getString(R.string.confirm_location));
-                commitFragment(locationFragment);
+                toolbarTitle.setText(getResources().getString(R.string.add_tags));
+                commitFragment(tagFragment);
                 break;
         }
 
@@ -183,8 +162,8 @@ public class UploadActivity extends AppCompatActivity {
     public void onNextButtonPressed() {
         switch (currentPage) {
             case 0:
-                toolbarTitle.setText(getResources().getString(R.string.add_tags));
-                commitFragment(tagFragment);
+                toolbarTitle.setText(getResources().getString(R.string.confirm_location));
+                commitFragment(locationFragment);
                 break;
             case 1:
                 break;
@@ -198,7 +177,7 @@ public class UploadActivity extends AppCompatActivity {
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(getResources().getString(R.string.confirm_location));
+        toolbarTitle.setText(getResources().getString(R.string.add_tags));
         setSupportActionBar(toolbar);
 
         ImageView backButton = (ImageView) toolbar.findViewById(R.id.toolbar_back);

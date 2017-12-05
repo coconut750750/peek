@@ -37,7 +37,7 @@ public class UploadLocationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_upload_location, container, false);
 
         mapView = (MapView) view.findViewById(R.id.map);
-        mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>(), true);
+        mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>());
         mapManager.startMap(savedInstanceState);
 
         return view;

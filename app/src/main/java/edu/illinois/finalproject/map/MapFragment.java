@@ -39,7 +39,7 @@ public class MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.page_map, container, false);
         mapView = (MapView) view.findViewById(R.id.map);
 
-        mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>(), false);
+        mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>());
         mapManager.startMap(savedInstanceState);
 
         //toolbar_upload

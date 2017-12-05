@@ -3,6 +3,7 @@ package edu.illinois.finalproject.map;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,13 +36,11 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     private double lon;
     private GoogleMap gMap;
     private List<LatLng> mapMarkers;
-    private boolean markCurrent;
 
-    public MapManager(Context context, MapView mapView, List<LatLng> markers, boolean markCurrent) {
+    public MapManager(Context context, MapView mapView, List<LatLng> markers) {
         this.context = context;
         this.mapView = mapView;
         mapMarkers = markers;
-        this.markCurrent = markCurrent;
 
         // create a google api client to access location
         // source: https://stackoverflow.com/questions/38242917/how-can-i-get-the-current-location-
@@ -114,10 +113,6 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         double angle = 0.0;
         double x = Math.sin(-angle * Math.PI / 180) * 0.5 + 0.5;
         double y = -(Math.cos(-angle * Math.PI / 180) * 0.5 - 0.5);
-
-        if (markCurrent) {
-            gMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).infoWindowAnchor((float)x, (float)y - 0.1f));
-        }
 
         for (LatLng photoCoord : mapMarkers) {
             gMap.addMarker(new MarkerOptions().position(photoCoord));
