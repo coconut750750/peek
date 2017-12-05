@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".6"
+        android:layout_weight=".75"
         android:elevation="8dp"
         app:cardCornerRadius="0dp">
 
@@ -32,6 +32,6 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.4"/>
+        android:layout_weight="1.25"/>
 
 </LinearLayout>

@@ -5,6 +5,7 @@
     tools:context="edu.illinois.finalproject.upload.AddTagFragment">
 
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="@dimen/margin"
         android:id="@+id/tag_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
