@@ -1,10 +1,13 @@
 package edu.illinois.finalproject;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * This is the main activity and users will see when using the app. It consists of three main
@@ -60,5 +63,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    /**
+     * https://github.com/chrisjenx/Calligraphy
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

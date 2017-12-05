@@ -17,5 +17,10 @@
         <item name="fontPath">fonts/Raleway-Regular.ttf</item>
     </style>
 
+    <style name="pacificoReg" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/Pacifico-Regular.ttf</item>
+    </style>
+
 
 </resources>

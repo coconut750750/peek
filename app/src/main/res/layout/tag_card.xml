@@ -11,10 +11,10 @@
 
     <TextView
         android:id="@+id/tag_view"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tag"

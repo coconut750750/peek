@@ -42,7 +42,7 @@ public class MapFragment extends Fragment {
         mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>(), false);
         mapManager.startMap(savedInstanceState);
 
-        //toolbar
+        //toolbar_upload
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 

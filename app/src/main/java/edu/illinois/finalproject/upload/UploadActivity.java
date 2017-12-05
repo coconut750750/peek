@@ -1,6 +1,7 @@
 package edu.illinois.finalproject.upload;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import java.io.File;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * This activity shows the user details about the photo they just took. It will display a map
@@ -154,6 +157,14 @@ public class UploadActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+
+
+    public void commitFragment(Fragment fragment) {
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
+    }
+
     public void onBackButtonPressed() {
         switch (currentPage) {
             case 0:
@@ -181,14 +192,8 @@ public class UploadActivity extends AppCompatActivity {
         currentPage += 1;
     }
 
-    public void commitFragment(Fragment fragment) {
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.commit();
-    }
-
     /**
-     * https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar-android
+     *
      */
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -196,41 +201,29 @@ public class UploadActivity extends AppCompatActivity {
         toolbarTitle.setText(getResources().getString(R.string.confirm_location));
         setSupportActionBar(toolbar);
 
-        final Drawable backArrow = getResources().getDrawable(R.drawable.back_arrow);
-        getSupportActionBar().setHomeAsUpIndicator(backArrow);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.upload_menu, menu);
-
-        MenuItem nextArrow = menu.findItem(R.id.action_next);
-
-        final Drawable nextArrowIcon = nextArrow.getIcon();
-        nextArrowIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
-                PorterDuff.Mode.SRC_ATOP);
-
-        nextArrow.setIcon(nextArrowIcon);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
+        ImageView backButton = (ImageView) toolbar.findViewById(R.id.toolbar_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 onBackButtonPressed();
-                return true;
-            case R.id.action_next:
+            }
+        });
+
+        ImageView nextButton = (ImageView) toolbar.findViewById(R.id.toolbar_next);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 onNextButtonPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+            }
+        });
+    }
+
+    /**
+     * https://github.com/chrisjenx/Calligraphy
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
