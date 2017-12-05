@@ -47,6 +47,7 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
         List<String> results = new ArrayList<>();
         for (Concept concept : predictionResults.get(0).data()) {
             results.add(concept.name());
+            Log.d("asdf", concept.name()+" "+concept.value());
         }
 
         return results;
@@ -54,7 +55,6 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
 
     @Override
     protected void onPostExecute(List<String> results) {
-        Log.d("asdf", "onPostExecute: ");
         adapter.setTagsList(results);
         adapter.notifyDataSetChanged();
     }

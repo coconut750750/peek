@@ -125,7 +125,7 @@ public class UploadActivity extends AppCompatActivity {
                     });
         }
 
-        tagsAdapter = new TagsAdapter();
+        tagsAdapter = new TagsAdapter(this);
         ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
         clarifaiAsync.execute(capturedBitmap);
 

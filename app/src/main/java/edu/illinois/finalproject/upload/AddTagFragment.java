@@ -2,16 +2,13 @@ package edu.illinois.finalproject.upload;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 
 /**
  *
@@ -19,10 +16,8 @@ import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 public class AddTagFragment extends Fragment {
     
     public static final String IMAGE_KEY = "tagsArray";
-    private TagsAdapter tagsAdapter;
 
     public AddTagFragment() {
-        tagsAdapter = new TagsAdapter();
         // Required empty public constructor
     }
 

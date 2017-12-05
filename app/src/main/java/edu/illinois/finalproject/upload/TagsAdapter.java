@@ -1,5 +1,6 @@
 package edu.illinois.finalproject.upload;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,17 +20,32 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     private List<String> tags;
     public static final int MAX_SUGGESTIONS = 8;
+    private Context context;
 
-    public TagsAdapter() {
+    public TagsAdapter(Context context) {
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textView;
+        private boolean clicked;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tag_view);
+            clicked = false;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clicked = !clicked;
+                    if (clicked) {
+                        textView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    } else {
+                        textView.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                }
+            });
         }
     }
 
@@ -56,7 +72,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
     /**
-     *
      * @param tags
      */
     public void setTagsList(List<String> tags) {
