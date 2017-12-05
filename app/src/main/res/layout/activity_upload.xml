@@ -11,19 +11,29 @@
     <include
         layout="@layout/toolbar"/>
 
-    <ImageView
-        android:layout_margin="16dp"
-        android:id="@+id/captured_image"
+    <android.support.v7.widget.CardView
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitStart"
-        android:layout_weight=".75"/>
+        android:layout_weight=".6"
+        android:elevation="8dp"
+        app:cardCornerRadius="2dp">
+
+        <ImageView
+            android:id="@+id/captured_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </android.support.v7.widget.CardView>
 
     <RelativeLayout
-        android:layout_margin="16dp"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.25"/>
+        android:layout_weight="1.4"/>
 
 </LinearLayout>

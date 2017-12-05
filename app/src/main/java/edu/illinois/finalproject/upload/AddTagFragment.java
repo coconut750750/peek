@@ -3,10 +3,12 @@ package edu.illinois.finalproject.upload;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
@@ -53,8 +55,9 @@ public class AddTagFragment extends Fragment {
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.tag_recycler_view);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         TagsAdapter tagsAdapter = ((UploadActivity) getActivity()).getTagsAdapter();
         mRecyclerView.setAdapter(tagsAdapter);

@@ -18,6 +18,7 @@ import edu.illinois.finalproject.R;
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     private List<String> tags;
+    public static final int MAX_SUGGESTIONS = 8;
 
     public TagsAdapter() {
     }
@@ -51,7 +52,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         if (tags == null) {
             return 0;
         }
-        return tags.size();
+        return Math.min(tags.size(), MAX_SUGGESTIONS);
     }
 
     /**

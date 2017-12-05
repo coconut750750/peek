@@ -16,7 +16,7 @@
         android:background="@drawable/capture_button"
         android:layout_height="84dp"
         android:layout_width="84dp"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/margin"
         android:layout_gravity="center_horizontal|bottom"/>
 
 </FrameLayout>
