@@ -12,21 +12,17 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import java.io.ByteArrayOutputStream;
-
 import edu.illinois.finalproject.R;
 
 /**
  *
  */
 public class AddTagFragment extends Fragment {
-    
-    public static final String IMAGE_KEY = "tagsArray";
 
     public AddTagFragment() {
         // Required empty public constructor
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

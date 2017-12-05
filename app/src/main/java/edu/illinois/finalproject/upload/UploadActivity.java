@@ -47,7 +47,6 @@ public class UploadActivity extends AppCompatActivity {
     public static final int DEFAULT_ZOOM = 15;
 
     private Bitmap capturedBitmap;
-    private ImageView capturedImageView;
     private LatLng photoCoord;
 
     private int currentPage = 0;
@@ -58,6 +57,8 @@ public class UploadActivity extends AppCompatActivity {
     private AddTagFragment tagFragment;
     private TagsAdapter tagsAdapter;
     private TextView toolbarTitle;
+
+    private ClarifaiAsync clarifaiAsync;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -70,8 +71,6 @@ public class UploadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload);
 
         setupToolbar();
-
-        capturedImageView = (ImageView) findViewById(R.id.captured_image);
 
         Intent passedIntent = getIntent();
         String photoName = passedIntent.getStringExtra(CAPTURED_PHOTO_NAME);
@@ -106,7 +105,7 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         tagsAdapter = new TagsAdapter(this);
-        ClarifaiAsync clarifaiAsync = new ClarifaiAsync(tagsAdapter);
+        clarifaiAsync = new ClarifaiAsync(tagsAdapter);
         clarifaiAsync.execute(capturedBitmap);
 
         tagFragment = new AddTagFragment();

@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +42,6 @@ public class PageSwipeAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return pageFragments.size();
     }
 }

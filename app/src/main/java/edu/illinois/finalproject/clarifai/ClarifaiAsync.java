@@ -38,24 +38,30 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
         bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
 
-        List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels().generalModel()
-                .predict().withInputs(ClarifaiInput.forImage(imageData))
-                .executeSync()
-                .get();
+        try {
+            List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels().generalModel()
+                    .predict().withInputs(ClarifaiInput.forImage(imageData))
+                    .executeSync()
+                    .get();
 
+            List<String> results = new ArrayList<>();
+            for (Concept concept : predictionResults.get(0).data()) {
+                results.add(concept.name());
+            }
 
-        List<String> results = new ArrayList<>();
-        for (Concept concept : predictionResults.get(0).data()) {
-            results.add(concept.name());
-            Log.d("asdf", concept.name()+" "+concept.value());
+            return results;
+
+        } catch (java.util.NoSuchElementException e) {
+            // throws this error if user quits the activity too early
+            return null;
         }
-
-        return results;
     }
 
     @Override
     protected void onPostExecute(List<String> results) {
-        adapter.setTagsList(results);
-        adapter.notifyDataSetChanged();
+        if (results != null) {
+            adapter.setTagsList(results);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

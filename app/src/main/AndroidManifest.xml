@@ -23,7 +23,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDHnAQFfJZp91uLhr9CnYsI_l6WCG0jjJ8"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

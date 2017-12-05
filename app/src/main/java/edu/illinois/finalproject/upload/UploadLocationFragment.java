@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,10 +38,9 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
     private MapView mapView;
     private Context context;
     private GoogleApiClient googleApiClient;
-    private double lat;
-    private double lon;
     private GoogleMap gMap;
     private Bitmap displayBitmap;
+    public static final float INFO_WINDOW_OFFSET = 0.1f;
 
     public UploadLocationFragment() {
         // Required empty public constructor
@@ -55,7 +57,7 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
         googleApiClient.connect();
         Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
 
-        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, capturedBitmap.getWidth()/5, capturedBitmap.getHeight()/5, false);
+        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, capturedBitmap.getWidth() / 5, capturedBitmap.getHeight() / 5, false);
 
     }
 
@@ -90,20 +92,17 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
 
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
-                lat = lastLocation.getLatitude();
-                lon = lastLocation.getLongitude();
-
-                gMap.setMyLocationEnabled(true); // displays current location
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
+                LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
                 MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayBitmap);
                 gMap.setInfoWindowAdapter(mapMarkerAdapter);
 
                 double angle = 0.0;
-                double x = Math.sin(-angle * Math.PI / 180) * 0.5 + 0.5;
-                double y = -(Math.cos(-angle * Math.PI / 180) * 0.5 - 0.5);
+                float x = (float) (Math.sin(-angle * Math.PI / 180) / 2f + 0.5);
+                float y = (float) (-(Math.cos(-angle * Math.PI / 180) / 2f - 0.5)) - INFO_WINDOW_OFFSET;
 
-                gMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).infoWindowAnchor((float) x, (float) y - 0.1f));
+                gMap.addMarker(new MarkerOptions().position(location).infoWindowAnchor(x, y));
             }
         }
     }

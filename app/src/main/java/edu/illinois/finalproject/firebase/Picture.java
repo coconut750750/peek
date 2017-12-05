@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.firebase;
 
 import com.google.android.gms.maps.model.LatLng;
 

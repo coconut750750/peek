@@ -1,4 +1,4 @@
-package edu.illinois.finalproject;
+package edu.illinois.finalproject.main;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new PageSwipeAdapter(getSupportFragmentManager()));
+        mViewPager.setPageTransformer(false, new MainPageTransformer());
         mViewPager.setCurrentItem(1);
 
         askForPermissions();
