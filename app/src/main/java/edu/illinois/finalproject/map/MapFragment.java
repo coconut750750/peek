@@ -2,6 +2,8 @@ package edu.illinois.finalproject.map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,10 @@ public class MapFragment extends Fragment {
 
         mapManager = new MapManager(getContext(), mapView, new ArrayList<LatLng>(), false);
         mapManager.startMap(savedInstanceState);
+
+        //toolbar
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         return view;
     }

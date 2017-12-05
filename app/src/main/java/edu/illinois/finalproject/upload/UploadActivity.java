@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -53,6 +54,7 @@ public class UploadActivity extends AppCompatActivity {
     private UploadLocationFragment locationFragment;
     private AddTagFragment tagFragment;
     private TagsAdapter tagsAdapter;
+    private TextView toolbarTitle;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -159,6 +161,7 @@ public class UploadActivity extends AppCompatActivity {
                 finish();
                 break;
             case 1:
+                toolbarTitle.setText(getResources().getString(R.string.confirm_location));
                 commitFragment(locationFragment);
                 break;
         }
@@ -169,6 +172,7 @@ public class UploadActivity extends AppCompatActivity {
     public void onNextButtonPressed() {
         switch (currentPage) {
             case 0:
+                toolbarTitle.setText(getResources().getString(R.string.add_tags));
                 commitFragment(tagFragment);
                 break;
             case 1:
@@ -187,10 +191,9 @@ public class UploadActivity extends AppCompatActivity {
      * https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar-android
      */
     public void setupToolbar() {
-        setTitle("Confirm Location");
-
-        //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(getResources().getString(R.string.confirm_location));
         setSupportActionBar(toolbar);
 
         final Drawable backArrow = getResources().getDrawable(R.drawable.back_arrow);
