@@ -21,11 +21,12 @@ import edu.illinois.finalproject.upload.TagsAdapter;
 
 public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
 
-    private static ClarifaiClient client= new ClarifaiBuilder(ClarifaiApiKey.KEY).buildSync();
+    private static ClarifaiClient client;
     private TagsAdapter adapter;
 
     public ClarifaiAsync(TagsAdapter adapter) {
         this.adapter = adapter;
+        client = new ClarifaiBuilder(ClarifaiApiKey.KEY).buildSync();
     }
 
     @Override
@@ -38,6 +39,8 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
         bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
 
+        Log.d("asdf", "in async");
+
         try {
             List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels().generalModel()
                     .predict().withInputs(ClarifaiInput.forImage(imageData))
@@ -47,12 +50,14 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
             List<String> results = new ArrayList<>();
             for (Concept concept : predictionResults.get(0).data()) {
                 results.add(concept.name());
+                Log.d("asdf", concept.name());
             }
 
             return results;
 
         } catch (java.util.NoSuchElementException e) {
             // throws this error if user quits the activity too early
+            Log.d("asdf", "error");
             return null;
         }
     }

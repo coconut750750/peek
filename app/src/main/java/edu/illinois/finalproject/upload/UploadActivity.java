@@ -139,6 +139,12 @@ public class UploadActivity extends AppCompatActivity {
 
     public void commitFragment(Fragment fragment) {
         transaction = getSupportFragmentManager().beginTransaction();
+        if (currentPage == 0) {
+            transaction.setCustomAnimations(R.anim.right_slide_in, R.anim.left_slide_out);
+        } else {
+            transaction.setCustomAnimations(R.anim.left_slide_in, R.anim.right_slide_out);
+        }
+
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }

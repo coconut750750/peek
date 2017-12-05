@@ -71,7 +71,4 @@ public class AddTagFragment extends Fragment {
         return view;
     }
 
-    public static Bitmap byteToBitmap(byte[] imageData) {
-        return BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-    }
 }
