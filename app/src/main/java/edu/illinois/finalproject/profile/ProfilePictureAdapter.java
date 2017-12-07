@@ -51,6 +51,9 @@ public class ProfilePictureAdapter extends RecyclerView.Adapter<ProfilePictureAd
 
     @Override
     public int getItemCount() {
+        if (images == null) {
+            return 0;
+        }
         return images.size();
     }
 
