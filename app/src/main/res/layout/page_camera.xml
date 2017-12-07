@@ -17,6 +17,6 @@
         android:layout_height="84dp"
         android:layout_width="84dp"
         android:layout_margin="@dimen/margin"
-        android:layout_gravity="center_horizontal|bottom"/>
+        android:layout_gravity="center_horizontal|bottom" />
 
 </FrameLayout>
