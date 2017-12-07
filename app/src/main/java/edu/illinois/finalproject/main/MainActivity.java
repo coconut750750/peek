@@ -2,10 +2,13 @@ package edu.illinois.finalproject.main;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -18,16 +21,57 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
     // app defined constant to determine the permission that was requested
     public static final int PERMISSIONS_ALL = 1;
+    private ViewPager mViewPager;
+    private Button mapButton;
+    private Button profileButton;
+
+    public static final int MAP_PAGE = 0;
+    public static final int CAMERA_PAGE = 1;
+    public static final int PROFILE_PAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        // configure buttons
+        mapButton = (Button) findViewById(R.id.map_menu_button);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(MAP_PAGE, true);
+            }
+        });
+
+        profileButton = (Button) findViewById(R.id.profile_menu_button);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(PROFILE_PAGE, true);
+            }
+        });
+
+        // configure viewpager
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new PageSwipeAdapter(getSupportFragmentManager()));
         mViewPager.setPageTransformer(false, new MainPageTransformer());
         mViewPager.setCurrentItem(1);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                adjustButtonMargins(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         askForPermissions();
     }
@@ -44,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
         };
 
-        if(!hasPermissions(permissionsToAsk)){
+        if (!hasPermissions(permissionsToAsk)) {
             ActivityCompat.requestPermissions(this, permissionsToAsk, PERMISSIONS_ALL);
         }
     }
@@ -52,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Checks to see if application has a list of permissions. If not, the app will request them.
      * Source: https://stackoverflow.com/questions/34342816/android-6-0-multiple-permissions
+     *
      * @param permissions the list of permissions to check
      * @return false if one permissions is not granted. true if all permissions are granted
      */
@@ -68,11 +113,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * https://github.com/chrisjenx/Calligraphy
+     * This method enables the library used to assign fonts to text on runtime
+     * Source: https://github.com/chrisjenx/Calligraphy
+     *
      * @param newBase
      */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    /**
+     * move the menu buttons off the screen
+     *
+     * @param pos
+     * @param posOffset
+     */
+    public void adjustButtonMargins(int pos, float posOffset) {
+        int displacementMult = 2;
+        float absolutePos = pos + posOffset;
+
+        float posRelativeToCamera = Math.abs(absolutePos - CAMERA_PAGE) * displacementMult - 1;
+
+        int margin = (int) getResources().getDimension(R.dimen.menu_button_margin);
+        int percentMargin = (int) (margin * posRelativeToCamera);
+
+        RelativeLayout.LayoutParams mapButtonLayout =
+                (RelativeLayout.LayoutParams) mapButton.getLayoutParams();
+        mapButtonLayout.setMarginStart(percentMargin);
+        mapButton.setLayoutParams(mapButtonLayout);
+
+        RelativeLayout.LayoutParams profileButtonLayout =
+                (RelativeLayout.LayoutParams) profileButton.getLayoutParams();
+        profileButtonLayout.setMarginEnd(percentMargin);
+        profileButton.setLayoutParams(profileButtonLayout);
     }
 }
