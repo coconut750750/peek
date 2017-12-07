@@ -65,29 +65,13 @@ public class ProfileFragment extends Fragment {
                 LinearLayoutManager.VERTICAL, false);
         postRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<Bitmap> profilePosts = new ArrayList<>();
-        profilePosts.add(getBitmapFromURL(PICTURE1));
-        profilePosts.add(getBitmapFromURL(PICTURE2));
-        profilePosts.add(getBitmapFromURL(PICTURE3));
-
-        ProfilePictureAdapter pictureAdapter = new ProfilePictureAdapter(profilePosts);
+        ProfilePictureAdapter pictureAdapter = new ProfilePictureAdapter(null);
         postRecyclerView.setAdapter(pictureAdapter);
-        pictureAdapter.notifyDataSetChanged();
+        BitmapRetrieval bitmapAsync =  new BitmapRetrieval(pictureAdapter);
+        bitmapAsync.execute(PICTURE1, PICTURE2, PICTURE3);
 
         return view;
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
 
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            return null;
-        }
-    }
 }

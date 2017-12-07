@@ -54,4 +54,7 @@ public class ProfilePictureAdapter extends RecyclerView.Adapter<ProfilePictureAd
         return images.size();
     }
 
+    public void setImages(List<Bitmap> images) {
+        this.images = images;
+    }
 }
