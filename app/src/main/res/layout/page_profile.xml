@@ -10,6 +10,7 @@
         layout="@layout/toolbar_main"/>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/profile_info"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -21,6 +22,7 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/profile_info"
         android:id="@+id/posts_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
