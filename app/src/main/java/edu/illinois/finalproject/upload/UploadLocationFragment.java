@@ -58,8 +58,8 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
         googleApiClient.connect();
         Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
 
-        int newWidth = capturedBitmap.getWidth() / 2;
-        int newHeight = capturedBitmap.getHeight() / 2;
+        int newWidth = capturedBitmap.getWidth() / 3;
+        int newHeight = capturedBitmap.getHeight() / 3;
         displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, newWidth, newHeight, false);
     }
 

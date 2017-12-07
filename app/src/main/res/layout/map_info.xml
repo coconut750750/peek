@@ -20,16 +20,6 @@
             android:layout_weight=".75"
             android:padding="4dp"/>
 
-        <TextView
-            android:layout_below="@+id/map_info_image"
-            android:id="@+id/map_info_coord"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/ralewayReg"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1.25"
-            android:padding="4dp"/>
-
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
