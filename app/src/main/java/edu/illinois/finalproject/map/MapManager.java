@@ -89,7 +89,8 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      */
     public void startMap(Bundle savedInstanceState) {
         // starts and displays the map view
-        // https://stackoverflow.com/questions/16536414/how-to-use-mapview-in-android-using-google-map-v2
+        // https://stackoverflow.com/questions/16536414/how-to-use-mapview-in-android-
+        // using-google-map-v2
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override

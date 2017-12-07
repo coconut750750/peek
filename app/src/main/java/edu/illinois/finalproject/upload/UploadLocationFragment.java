@@ -58,8 +58,9 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
         googleApiClient.connect();
         Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
 
-        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, capturedBitmap.getWidth() / 2, capturedBitmap.getHeight() / 2, false);
-
+        int newWidth = capturedBitmap.getWidth() / 2;
+        int newHeight = capturedBitmap.getHeight() / 2;
+        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, newWidth, newHeight, false);
     }
 
     @Override
@@ -100,8 +101,10 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
                 gMap.setInfoWindowAdapter(mapMarkerAdapter);
 
                 double angle = 0.0;
-                float x = (float) (Math.sin(-angle * Math.PI / 180) / 2f + 0.5);
-                float y = (float) (-(Math.cos(-angle * Math.PI / 180) / 2f - 0.5)) - INFO_WINDOW_OFFSET;
+                float multiplier = 0.5f;
+                float offset = 0.5f;
+                float x = (float) (Math.sin(angle) * multiplier + offset);
+                float y = (float) (-(Math.cos(angle) * multiplier - offset)) - INFO_WINDOW_OFFSET;
 
                 Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
                 currentMarker.setInfoWindowAnchor(x, y);

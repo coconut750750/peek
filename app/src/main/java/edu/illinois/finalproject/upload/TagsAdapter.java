@@ -40,9 +40,11 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                 public void onClick(View view) {
                     clicked = !clicked;
                     if (clicked) {
-                        textView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                        textView.setTextColor(context.getResources()
+                                .getColor(R.color.colorAccent));
                     } else {
-                        textView.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                        textView.setTextColor(context.getResources()
+                                .getColor(R.color.colorPrimaryDark));
                     }
                 }
             });

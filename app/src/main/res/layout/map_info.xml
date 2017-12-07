@@ -17,7 +17,8 @@
             android:id="@+id/map_info_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".75"/>
+            android:layout_weight=".75"
+            android:padding="4dp"/>
 
         <TextView
             android:layout_below="@+id/map_info_image"
@@ -26,7 +27,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/ralewayReg"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1.25"/>
+            android:layout_weight="1.25"
+            android:padding="4dp"/>
 
     </LinearLayout>
 

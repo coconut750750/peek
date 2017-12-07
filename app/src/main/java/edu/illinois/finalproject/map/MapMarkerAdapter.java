@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.HashMap;
@@ -31,16 +32,17 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = layoutInflater.inflate(R.layout.map_info, null);
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.map_info, null);
+
+        LatLng markerPos = marker.getPosition();
+
+        TextView textView = (TextView) v.findViewById(R.id.map_info_coord);
+        textView.setText(String.format("%s, %s", markerPos.latitude, markerPos.longitude));
 
         ImageView imageView = (ImageView) v.findViewById(R.id.map_info_image);
-        TextView textView = (TextView) v.findViewById(R.id.map_info_coord);
-
-        textView.setText(marker.getPosition().latitude + ", " + marker.getPosition().longitude);
-
         imageView.setImageBitmap(image);
-        marker.getId();
         return v;
     }
 

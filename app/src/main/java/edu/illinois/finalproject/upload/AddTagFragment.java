@@ -35,7 +35,8 @@ public class AddTagFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_tag, container, false);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.tag_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         TagsAdapter tagsAdapter = ((UploadActivity) getActivity()).getTagsAdapter();
