@@ -36,10 +36,10 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.map_info, null);
 
-        LatLng markerPos = marker.getPosition();
-
-        TextView textView = (TextView) v.findViewById(R.id.map_info_coord);
-        textView.setText(String.format("%s, %s", markerPos.latitude, markerPos.longitude));
+//        LatLng markerPos = marker.getPosition();
+//
+//        TextView textView = (TextView) v.findViewById(R.i.map_info_coord);
+//        textView.setText(String.format("%s, %s", markerPos.latitude, markerPos.longitude));
 
         ImageView imageView = (ImageView) v.findViewById(R.id.map_info_image);
         imageView.setImageBitmap(image);
