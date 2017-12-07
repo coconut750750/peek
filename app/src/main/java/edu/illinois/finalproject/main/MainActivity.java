@@ -58,18 +58,18 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                adjustButtonMargins(position, positionOffset);
+            public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {
+                adjustButtonMargins(pos, posOffset);
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                // need to implement but no functionality needed
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                // need to implement but no functionality needed
             }
         });
 

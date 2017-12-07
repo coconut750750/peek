@@ -58,7 +58,8 @@ public class CameraFragment extends Fragment {
 
             try {
                 // creates a file output stream to write the photo data to
-                FileOutputStream fileOutStream = getActivity().openFileOutput(photoPath, MODE_PRIVATE);
+                FileOutputStream fileOutStream = getActivity().openFileOutput(photoPath,
+                        MODE_PRIVATE);
                 fileOutStream.write(data);
                 fileOutStream.close();
             } catch (IOException e) {

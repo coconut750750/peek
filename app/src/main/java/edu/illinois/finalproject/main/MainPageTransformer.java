@@ -12,22 +12,22 @@ import android.view.View;
 
 public class MainPageTransformer implements ViewPager.PageTransformer {
 
-    float prevPosition = 0;
+    public static final float PAST_PAGE = 1.0f;
+    public static final float ON_PAGE = 0.0f;
+
+    public static final float INVISIBLE = 0.0f;
+    public static final float VISIBLE = 1.0f;
 
     @Override
     public void transformPage(View view, float position) {
         view.setTranslationX(view.getWidth() * -position);
 
-        if(position <= -1.0F || position >= 1.0F) {
-            view.setAlpha(0.0F);
-        } else if( position == 0.0F ) {
-            view.setAlpha(1.0F);
+        if(Math.abs(position) >= PAST_PAGE) {
+            view.setAlpha(INVISIBLE);
+        } else if( position == ON_PAGE ) {
+            view.setAlpha(VISIBLE);
         } else {
-            view.setAlpha(1.0F - Math.abs(position));
+            view.setAlpha(VISIBLE - Math.abs(position));
         }
-    }
-
-    public boolean scrollingRight(float position) {
-        return position > prevPosition;
     }
 }

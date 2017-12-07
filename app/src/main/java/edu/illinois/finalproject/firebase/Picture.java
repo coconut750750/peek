@@ -16,7 +16,8 @@ public class Picture {
     public String name;
     public String datetime;
 
-    public Picture(String storageLocation, LatLng coord, List<String> tags, String name, String datetime) {
+    public Picture(String storageLocation, LatLng coord, List<String> tags, String name,
+                   String datetime) {
         this.storage_location = storageLocation;
         this.tags = tags;
         this.name = name;

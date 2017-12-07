@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.illinois.finalproject.R;
@@ -57,7 +58,7 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
         googleApiClient.connect();
         Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
 
-        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, capturedBitmap.getWidth() / 5, capturedBitmap.getHeight() / 5, false);
+        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, capturedBitmap.getWidth() / 2, capturedBitmap.getHeight() / 2, false);
 
     }
 
@@ -102,7 +103,9 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
                 float x = (float) (Math.sin(-angle * Math.PI / 180) / 2f + 0.5);
                 float y = (float) (-(Math.cos(-angle * Math.PI / 180) / 2f - 0.5)) - INFO_WINDOW_OFFSET;
 
-                gMap.addMarker(new MarkerOptions().position(location).infoWindowAnchor(x, y));
+                Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
+                currentMarker.setInfoWindowAnchor(x, y);
+                currentMarker.showInfoWindow();
             }
         }
     }

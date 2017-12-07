@@ -42,8 +42,8 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
         Log.d("asdf", "in async");
 
         try {
-            List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels().generalModel()
-                    .predict().withInputs(ClarifaiInput.forImage(imageData))
+            List<ClarifaiOutput<Concept>> predictionResults = client.getDefaultModels()
+                    .generalModel().predict().withInputs(ClarifaiInput.forImage(imageData))
                     .executeSync()
                     .get();
 
