@@ -21,7 +21,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.main.MainActivity;
 
+/**
+ * https://www.youtube.com/watch?v=MFWZLYFD8yI
+ */
 public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private FirebaseAuth mAuth;
@@ -53,9 +57,15 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d("asdf", "logged in!");
-                } else {
-                    Log.d("asdf", "null user");
+                    Log.d("asdf", "hi"+user.getEmail()+" "+user.getUid());
+                    Log.d("asdf","logged in!");
+                    Intent mainActivityIntent = new Intent(
+                            AuthenticationActivity.this, MainActivity.class);
+                    mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                    startActivity(mainActivityIntent);
+                    overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
                 }
             }
         };

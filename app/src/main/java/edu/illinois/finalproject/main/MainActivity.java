@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int MAP_PAGE = 0;
     public static final int CAMERA_PAGE = 1;
     public static final int PROFILE_PAGE = 2;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         askForPermissions();
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
     }
 
     /**
