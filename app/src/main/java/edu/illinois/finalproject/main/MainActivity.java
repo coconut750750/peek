@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Button mapButton;
     private Button profileButton;
+    private Button cameraButton;
 
     public static final int MAP_PAGE = 0;
     public static final int CAMERA_PAGE = 1;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //cameraButton = (Button) findViewById(R.id.take_picture);
+
         // configure viewpager
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new PageSwipeAdapter(getSupportFragmentManager()));
@@ -59,7 +64,24 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {
-                adjustButtonMargins(pos, posOffset);
+                float absolutePos = pos + posOffset;
+
+                float posRelativeToCamera = Math.abs(absolutePos - CAMERA_PAGE);
+
+                adjustButtonMargins(posRelativeToCamera);
+                //adjustCaptureButton(posRelativeToCamera);
+
+//                if (pos != CAMERA_PAGE) {
+//                    cameraButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (mViewPager.getCurrentItem() == CAMERA_PAGE) {
+//                                return;
+//                            }
+//                            mViewPager.setCurrentItem(CAMERA_PAGE, true);
+//                        }
+//                    });
+//                }
             }
 
             @Override
@@ -126,14 +148,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      * move the menu buttons off the screen
      *
-     * @param pos
-     * @param posOffset
+     * @param posRelativeToCamera
      */
-    public void adjustButtonMargins(int pos, float posOffset) {
-        int displacementMult = 2;
-        float absolutePos = pos + posOffset;
-
-        float posRelativeToCamera = Math.abs(absolutePos - CAMERA_PAGE) * displacementMult - 1;
+    public void adjustButtonMargins(float posRelativeToCamera) {
+        float displacementMult = 0.5f;
+        float initialDisplacement = 0.5f;
+        posRelativeToCamera = posRelativeToCamera * displacementMult + initialDisplacement;
 
         int margin = (int) getResources().getDimension(R.dimen.menu_button_margin);
         int percentMargin = (int) (margin * posRelativeToCamera);
@@ -148,4 +168,23 @@ public class MainActivity extends AppCompatActivity {
         profileButtonLayout.setMarginEnd(percentMargin);
         profileButton.setLayoutParams(profileButtonLayout);
     }
+
+//    /**
+//     * @param posRelativeToCamera
+//     */
+//    public void adjustCaptureButton(float posRelativeToCamera) {
+//        int inactiveSize = (int) getResources().getDimension(R.dimen.capture_button_size_inactive);
+//        int activeSize = (int) getResources().getDimension(R.dimen.capture_button_size_active);
+//        int sizeDiff = activeSize - inactiveSize;
+//        int absoluteSize = (int) (inactiveSize + sizeDiff * (1 - posRelativeToCamera));
+//
+//        RelativeLayout.LayoutParams cameraButtonLayout =
+//                (RelativeLayout.LayoutParams) cameraButton.getLayoutParams();
+//
+//        cameraButtonLayout.height = absoluteSize;
+//        cameraButtonLayout.width = absoluteSize;
+//
+//        cameraButton.setLayoutParams(cameraButtonLayout);
+//
+//    }
 }

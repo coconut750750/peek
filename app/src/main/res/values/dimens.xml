@@ -2,4 +2,7 @@
 <resources>
     <dimen name="margin">16dp</dimen>
     <dimen name="menu_button_margin">34dp</dimen>
+    <dimen name="menu_button_size">36dp</dimen>
+    <dimen name="capture_button_size_active">84dp</dimen>
+    <dimen name="capture_button_size_inactive">72dp</dimen>
 </resources>

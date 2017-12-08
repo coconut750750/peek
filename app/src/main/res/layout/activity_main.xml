@@ -16,17 +16,27 @@
         android:id="@+id/map_menu_button"
         android:background="@drawable/map_menu_button"
         android:elevation="36dp"
-        android:layout_height="36dp"
-        android:layout_width="36dp"
+        android:layout_height="@dimen/menu_button_size"
+        android:layout_width="@dimen/menu_button_size"
         android:layout_margin="@dimen/menu_button_margin"
         android:layout_alignParentBottom="true"/>
+
+    <!--<Button-->
+        <!--android:id="@+id/take_picture"-->
+        <!--android:background="@drawable/capture_button"-->
+        <!--android:layout_height="@dimen/menu_button_size"-->
+        <!--android:layout_width="@dimen/menu_button_size"-->
+        <!--android:layout_margin="@dimen/margin"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"/>-->
+
 
     <Button
         android:id="@+id/profile_menu_button"
         android:background="@drawable/profile_menu_button"
         android:elevation="36dp"
-        android:layout_height="36dp"
-        android:layout_width="36dp"
+        android:layout_height="@dimen/menu_button_size"
+        android:layout_width="@dimen/menu_button_size"
         android:layout_margin="@dimen/menu_button_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />

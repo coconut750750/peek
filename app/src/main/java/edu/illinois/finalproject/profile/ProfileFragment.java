@@ -67,8 +67,6 @@ public class ProfileFragment extends Fragment {
 
         ProfilePictureAdapter pictureAdapter = new ProfilePictureAdapter(null);
         postRecyclerView.setAdapter(pictureAdapter);
-        BitmapRetrieval bitmapAsync =  new BitmapRetrieval(pictureAdapter);
-        bitmapAsync.execute(PICTURE1, PICTURE2, PICTURE3);
 
         return view;
     }

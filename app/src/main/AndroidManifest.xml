@@ -21,19 +21,30 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDHnAQFfJZp91uLhr9CnYsI_l6WCG0jjJ8"/>
-        <activity
-            android:name=".main.MainActivity"
-            android:screenOrientation="portrait">
+            android:value="AIzaSyDHnAQFfJZp91uLhr9CnYsI_l6WCG0jjJ8" />
+
+        <activity android:name=".authentication.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+
         <activity android:name=".upload.UploadActivity">
 
         </activity>
+
     </application>
 
 </manifest>
