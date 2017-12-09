@@ -17,11 +17,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.illinois.finalproject.firebase.Picture;
+
 /**
  * Created by Brandon on 12/9/17.
  */
 
-public class FirebaseStorageAsync extends AsyncTask<String, Integer, Bitmap> {
+public class FirebaseStorageAsync extends AsyncTask<Picture, Integer, Bitmap> {
+    private StorageReference rootStorage;
 
     private MapManager mapManager;
     private LatLng bitmapGeoLocation;
@@ -29,12 +32,14 @@ public class FirebaseStorageAsync extends AsyncTask<String, Integer, Bitmap> {
     public FirebaseStorageAsync(MapManager mapManager, LatLng bitmapGeoLocation) {
         this.mapManager = mapManager;
         this.bitmapGeoLocation = bitmapGeoLocation;
+        rootStorage = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
-    protected Bitmap doInBackground(String... uris) {
+    protected Bitmap doInBackground(Picture... pictures) {
+        String uri = pictures[0].getUri();
         try {
-            URL url = new URL(uris[0]);
+            URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();

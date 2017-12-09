@@ -25,9 +25,7 @@ import com.google.firebase.storage.StorageReference;
 
 import edu.illinois.finalproject.firebase.Picture;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import edu.illinois.finalproject.R;
 
@@ -38,7 +36,6 @@ public class MapFragment extends Fragment {
     public static final String PHOTOS_REF = "photo_ids";
     private StorageReference rootStorage;
     private DatabaseReference photoIdRef;
-    private List<Bitmap> databaseBitmaps;
 
 
     private MapView mapView;
@@ -66,13 +63,7 @@ public class MapFragment extends Fragment {
                         HashMap<String, Double> location = uploadedPicture.getCoord();
                         final LatLng uploadedLocation = new LatLng(location.get(Picture.LATITUDE), location.get(Picture.LONGITUDE));
 
-                        rootStorage.child(uploadedPicture.getStorageLocation()).getDownloadUrl()
-                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        new FirebaseStorageAsync(mapManager, uploadedLocation).execute(uri.toString());
-                                    }
-                                });
+                        new FirebaseStorageAsync(mapManager, uploadedLocation).execute(uploadedPicture);
                     }
                 }
             }

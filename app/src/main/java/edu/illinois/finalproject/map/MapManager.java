@@ -112,8 +112,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     }
 
     /**
-     * Populates the map with a marker at the given latitude and longitude. The title of the marker
-     * will be "photo" but this will be changed to show the actual photo.
+     *
      */
     public void displayBitmap(Bitmap bitmap) {
         if (imageLocations.containsKey(bitmap)) {

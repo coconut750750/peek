@@ -1,6 +1,7 @@
 package edu.illinois.finalproject.upload;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,6 +56,7 @@ public class UploadActivity extends AppCompatActivity {
 
     public static final String PHOTOS_REF = "photo_ids";
     public static final String USER_PHOTOS_REF = "user_photos";
+    public static final String UPLOADED_PICTURE_KEY = "uploaded_pic";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
 
@@ -187,7 +190,6 @@ public class UploadActivity extends AppCompatActivity {
                 break;
             case 1:
                 uploadPictureToFirebase();
-                finish();
                 break;
         }
         currentPage += 1;
@@ -245,13 +247,23 @@ public class UploadActivity extends AppCompatActivity {
         capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] foxData = baos.toByteArray();
 
-        capturedImageRef.putBytes(foxData);
-
-        // create picture object and upload to firebase
-        String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
+        // create picture object to upload to firebase
+        final String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
                 .format(new Date());
-        Picture capturedPicture = new Picture(storageLocation, photoCoord, null, userId, timeStamp);
-        photoRef.setValue(capturedPicture);
+
+        UploadTask uploadTask = capturedImageRef.putBytes(foxData);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                String downloadUri = taskSnapshot.getDownloadUrl().toString();
+                Picture capturedPicture =  new Picture(storageLocation, downloadUri, photoCoord, null, userId, timeStamp);
+                photoRef.setValue(capturedPicture);
+
+                // once all data of picture is aggregated, finish the upload activity
+                finish();
+            }
+        });
 
         // add picture id to user's list of picture ids
         DatabaseReference userPhotoRef = FirebaseDatabase.getInstance()
