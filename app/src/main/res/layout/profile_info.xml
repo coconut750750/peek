@@ -20,11 +20,12 @@
         android:layout_weight="1"
         android:layout_margin="@dimen/margin"/>
 
-    <TextView
+    <Button
+        android:id="@+id/sign_out_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Posts: 20"
+        android:text="Sign Out"
         android:layout_weight="1"
         android:layout_margin="@dimen/margin"/>
 

@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         allUsers.put(uid, list.get(uid));
                     }
 
-                    allUsers.put(user.getUid(), user.getEmail());
+                    allUsers.put(user.getUid(), user.getDisplayName());
                     userIdsRef.setValue(allUsers);
                 }
             }

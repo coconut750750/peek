@@ -1,5 +1,6 @@
 package edu.illinois.finalproject.map;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import edu.illinois.finalproject.upload.TagsAdapter;
 
 public class MapInfoTagsAdapter extends RecyclerView.Adapter<MapInfoTagsAdapter.ViewHolder> {
 
+    private Context context;
     private List<String> infoTags;
 
-    public MapInfoTagsAdapter(List<String> tags) {
+    public MapInfoTagsAdapter(Context context, List<String> tags) {
+        this.context = context;
         this.infoTags = tags;
     }
 
@@ -31,7 +34,7 @@ public class MapInfoTagsAdapter extends RecyclerView.Adapter<MapInfoTagsAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tagView = (TextView) itemView.findViewWithTag(R.id.tag_view);
+            tagView = (TextView) itemView.findViewById(R.id.tag_view);
         }
     }
 
@@ -46,6 +49,7 @@ public class MapInfoTagsAdapter extends RecyclerView.Adapter<MapInfoTagsAdapter.
     @Override
     public void onBindViewHolder(MapInfoTagsAdapter.ViewHolder holder, int position) {
         holder.tagView.setText(infoTags.get(position));
+        holder.tagView.setTextSize(context.getResources().getDimension(R.dimen.map_info_tag_size));
     }
 
     @Override

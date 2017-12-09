@@ -46,11 +46,15 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                     if (clicked) {
                         textView.setTextColor(context.getResources()
                                 .getColor(R.color.colorAccent));
-                        clickedTags.add(tag);
+                        if (!clickedTags.contains(tag)) {
+                            clickedTags.add(tag);
+                        }
                     } else {
                         textView.setTextColor(context.getResources()
                                 .getColor(R.color.colorPrimaryDark));
-                        clickedTags.remove(tag);
+                        if (clickedTags.contains(tag)) {
+                            clickedTags.remove(tag);
+                        }
                     }
                 }
             });
@@ -69,6 +73,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     public void onBindViewHolder(TagsAdapter.ViewHolder holder, int position) {
         TextView textView = holder.textView;
         textView.setText(tags.get(position));
+        textView.setTextSize(context.getResources().getDimension(R.dimen.upload_tag_size));
     }
 
     @Override

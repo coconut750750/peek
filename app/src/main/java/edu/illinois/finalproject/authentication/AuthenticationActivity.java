@@ -28,9 +28,9 @@ import edu.illinois.finalproject.main.MainActivity;
  */
 public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private GoogleApiClient mGoogleApiClient;
+    public static FirebaseAuth mAuth;
+    public static FirebaseAuth.AuthStateListener mAuthListener;
+    public static GoogleApiClient mGoogleApiClient;
     private static final int SIGN_IN = 9001;
 
     @Override
@@ -61,6 +61,8 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                     mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
+                    Log.d("asdf", "logged in!");
+
                     startActivity(mainActivityIntent);
                     overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
                 }
@@ -72,6 +74,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        mGoogleApiClient.connect();
 
         signIn();
     }

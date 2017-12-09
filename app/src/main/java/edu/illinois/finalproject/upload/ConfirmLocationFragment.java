@@ -44,7 +44,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
     private Context context;
     private GoogleApiClient googleApiClient;
     private GoogleMap gMap;
-    private Bitmap displayBitmap;
+    private Bitmap capturedBitmap;
     public static final float INFO_WINDOW_OFFSET = 0.1f;
     public static final float INFO_WINDOW_X = 0.5f;
     public static final float INFO_WINDOW_Y = -1 + INFO_WINDOW_OFFSET;
@@ -62,11 +62,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
-        Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
-
-        int newWidth = capturedBitmap.getWidth() / 3;
-        int newHeight = capturedBitmap.getHeight() / 3;
-        displayBitmap = Bitmap.createScaledBitmap(capturedBitmap, newWidth, newHeight, false);
+        capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
     }
 
     @Override
@@ -108,7 +104,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
                 List<String> tags = ((UploadActivity)getActivity()).getTagsAdapter().getClickedTags();
-                Picture displayPicture = new Picture(displayBitmap, tags);
+                Picture displayPicture = new Picture(capturedBitmap, tags);
 
                 HashMap<String, Picture> mapMarkerPictures = new HashMap<>();
                 mapMarkerPictures.put(currentMarker.getId(), displayPicture);
