@@ -44,6 +44,8 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
     private GoogleMap gMap;
     private Bitmap displayBitmap;
     public static final float INFO_WINDOW_OFFSET = 0.1f;
+    public static final float INFO_WINDOW_X = 0.5f;
+    public static final float INFO_WINDOW_Y = -1 + INFO_WINDOW_OFFSET;
 
     public ConfirmLocationFragment() {
         // Required empty public constructor
@@ -99,14 +101,8 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
-                double angle = 0.0;
-                float multiplier = 0.5f;
-                float offset = 0.5f;
-                float x = (float) (Math.sin(angle) * multiplier + offset);
-                float y = (float) (-(Math.cos(angle) * multiplier - offset)) - INFO_WINDOW_OFFSET;
-
                 Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
-                currentMarker.setInfoWindowAnchor(x, y);
+                currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
                 HashMap<String, Bitmap> displayImages = new HashMap<>();
                 displayImages.put(currentMarker.getId(), displayBitmap);
