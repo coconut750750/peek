@@ -2,6 +2,7 @@ package edu.illinois.finalproject.upload;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -73,6 +74,8 @@ public class UploadActivity extends AppCompatActivity {
     private TextView toolbarTitle;
 
     private ClarifaiAsync clarifaiAsync;
+
+    private ProgressDialog progressDialog;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -231,35 +234,39 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void uploadPictureToFirebase() {
+        // show a progress dialog to users
+        progressDialog = new ProgressDialog(this, R.style.uploadDialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        progressDialog.setMessage("Uploading...");
+
         // get photo and user id's
         final DatabaseReference photoRef = FirebaseDatabase.getInstance()
                 .getReference(PHOTOS_REF).push();
         final String photoId = photoRef.getKey();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final String storageLocation = String.format("%s/%s.jpg", userId,  photoId);
+        final String uploadLoc = String.format("%s/%s.jpg", userId,  photoId);
 
         // put photo into storage
-        //https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference capturedImageRef = storageRef.child(storageLocation);
+        StorageReference uploadRef = FirebaseStorage.getInstance().getReference().child(uploadLoc);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] foxData = baos.toByteArray();
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteOutputStream);
+        byte[] imageData = byteOutputStream.toByteArray();
 
         // create picture object to upload to firebase
         final String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
                 .format(new Date());
 
-        UploadTask uploadTask = capturedImageRef.putBytes(foxData);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        uploadRef.putBytes(imageData)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture =  new Picture(storageLocation, downloadUri, photoCoord, null, userId, timeStamp);
-                photoRef.setValue(capturedPicture);
+                progressDialog.dismiss();
 
+                String downloadUri = taskSnapshot.getDownloadUrl().toString();
+                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, null, userId, timeStamp);
+                photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();
             }

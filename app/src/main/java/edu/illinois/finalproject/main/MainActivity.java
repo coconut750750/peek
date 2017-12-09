@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //cameraButton = (Button) findViewById(R.id.take_picture);
-
         // configure viewpager
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new PageSwipeAdapter(getSupportFragmentManager()));
@@ -81,23 +79,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {
                 float absolutePos = pos + posOffset;
-
                 float posRelativeToCamera = Math.abs(absolutePos - CAMERA_PAGE);
-
                 adjustButtonMargins(posRelativeToCamera);
-                //adjustCaptureButton(posRelativeToCamera);
-
-//                if (pos != CAMERA_PAGE) {
-//                    cameraButton.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            if (mViewPager.getCurrentItem() == CAMERA_PAGE) {
-//                                return;
-//                            }
-//                            mViewPager.setCurrentItem(CAMERA_PAGE, true);
-//                        }
-//                    });
-//                }
             }
 
             @Override
@@ -139,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // need to implement but no functionality needed
             }
         });
     }
@@ -214,23 +197,4 @@ public class MainActivity extends AppCompatActivity {
         profileButtonLayout.setMarginEnd(percentMargin);
         profileButton.setLayoutParams(profileButtonLayout);
     }
-
-//    /**
-//     * @param posRelativeToCamera
-//     */
-//    public void adjustCaptureButton(float posRelativeToCamera) {
-//        int inactiveSize = (int) getResources().getDimension(R.dimen.capture_button_size_inactive);
-//        int activeSize = (int) getResources().getDimension(R.dimen.capture_button_size_active);
-//        int sizeDiff = activeSize - inactiveSize;
-//        int absoluteSize = (int) (inactiveSize + sizeDiff * (1 - posRelativeToCamera));
-//
-//        RelativeLayout.LayoutParams cameraButtonLayout =
-//                (RelativeLayout.LayoutParams) cameraButton.getLayoutParams();
-//
-//        cameraButtonLayout.height = absoluteSize;
-//        cameraButtonLayout.width = absoluteSize;
-//
-//        cameraButton.setLayoutParams(cameraButtonLayout);
-//
-//    }
 }

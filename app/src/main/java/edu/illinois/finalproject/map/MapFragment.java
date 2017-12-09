@@ -1,7 +1,5 @@
 package edu.illinois.finalproject.map;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,9 +31,7 @@ import edu.illinois.finalproject.R;
  */
 public class MapFragment extends Fragment {
     public static final String PHOTOS_REF = "photo_ids";
-    private StorageReference rootStorage;
     private DatabaseReference photoIdRef;
-
 
     private MapView mapView;
     private MapManager mapManager;
@@ -49,7 +44,6 @@ public class MapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rootStorage = FirebaseStorage.getInstance().getReference();
         photoIdRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF);
         photoIdRef.addValueEventListener(new ValueEventListener() {
             @Override

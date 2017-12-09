@@ -22,5 +22,13 @@
         <item name="fontPath">fonts/Pacifico-Regular.ttf</item>
     </style>
 
+    <!-- progress dialog -->
+    <style name="uploadDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 
 </resources>
