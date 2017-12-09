@@ -54,10 +54,8 @@ public class MapFragment extends Fragment {
                 if (list != null) {
                     for (String id : list.keySet()) {
                         Picture uploadedPicture = list.get(id);
-                        HashMap<String, Double> location = uploadedPicture.getCoord();
-                        final LatLng uploadedLocation = new LatLng(location.get(Picture.LATITUDE), location.get(Picture.LONGITUDE));
 
-                        new FirebaseStorageAsync(mapManager, uploadedLocation).execute(uploadedPicture);
+                        new FirebaseStorageAsync(mapManager).execute(uploadedPicture);
                     }
                 }
             }

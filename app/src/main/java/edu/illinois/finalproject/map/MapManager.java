@@ -20,8 +20,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import edu.illinois.finalproject.firebase.Picture;
+
+import static edu.illinois.finalproject.firebase.Picture.LATITUDE;
+import static edu.illinois.finalproject.firebase.Picture.LONGITUDE;
 import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
 /***
@@ -38,16 +44,16 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     private MapView mapView;
     private GoogleApiClient googleApiClient;
     private GoogleMap gMap;
-    private HashMap<Bitmap, LatLng> imageLocations;
-    private HashMap<String, Bitmap> displayImages;
+    private List<Picture> picturesOnMap;
+    private HashMap<String, Picture> displayImages;
 
-    public MapManager(Context context, MapView mapView, HashMap<Bitmap, LatLng> imageLocations) {
+    public MapManager(Context context, MapView mapView, List<Picture> picturesOnMap) {
         this.context = context;
         this.mapView = mapView;
-        if (imageLocations == null) {
-            this.imageLocations = new HashMap<>();
+        if (picturesOnMap == null) {
+            this.picturesOnMap = new ArrayList<>();
         } else {
-            this.imageLocations = imageLocations;
+            this.picturesOnMap = picturesOnMap;
         }
         displayImages = new HashMap<>();
 
@@ -114,12 +120,14 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     /**
      *
      */
-    public void displayBitmap(Bitmap bitmap) {
-        if (imageLocations.containsKey(bitmap)) {
-            Marker currentMarker = gMap.addMarker(new MarkerOptions().position(imageLocations.get(bitmap)));
+    public void displayPicture(Picture picture) {
+        if (picturesOnMap.contains(picture)) {
+            LatLng location = new LatLng(picture.getCoord().get(LATITUDE), picture.getCoord().get(LONGITUDE));
+
+            Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
             currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
-            displayImages.put(currentMarker.getId(), bitmap);
+            displayImages.put(currentMarker.getId(), picture);
 
             MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
             gMap.setInfoWindowAdapter(mapMarkerAdapter);
@@ -133,7 +141,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         }
     }
 
-    public void addBitmap(Bitmap bitmap, LatLng location) {
-        this.imageLocations.put(bitmap, location);
+    public void addPicture(Picture picture) {
+        this.picturesOnMap.add(picture);
     }
 }

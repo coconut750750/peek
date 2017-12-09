@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.illinois.finalproject.R;
@@ -19,11 +20,13 @@ import edu.illinois.finalproject.R;
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     private List<String> tags;
+    private List<String> clickedTags;
     public static final int MAX_SUGGESTIONS = 8;
     private Context context;
 
     public TagsAdapter(Context context) {
         this.context = context;
+        this.clickedTags =  new ArrayList<>();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -38,13 +41,16 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String tag = textView.getText().toString();
                     clicked = !clicked;
                     if (clicked) {
                         textView.setTextColor(context.getResources()
                                 .getColor(R.color.colorAccent));
+                        clickedTags.add(tag);
                     } else {
                         textView.setTextColor(context.getResources()
                                 .getColor(R.color.colorPrimaryDark));
+                        clickedTags.remove(tag);
                     }
                 }
             });
@@ -83,7 +89,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         this.tags = tags;
     }
 
-    public boolean tagsRetrieved() {
-        return tags != null;
+    public List<String> getClickedTags() {
+        return clickedTags;
     }
 }

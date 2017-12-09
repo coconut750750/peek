@@ -27,8 +27,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
+import java.util.List;
 
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.firebase.Picture;
 import edu.illinois.finalproject.map.MapMarkerAdapter;
 
 import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
@@ -101,13 +103,17 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
+                // add a marker to the for the new picture
                 Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
                 currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
-                HashMap<String, Bitmap> displayImages = new HashMap<>();
-                displayImages.put(currentMarker.getId(), displayBitmap);
+                List<String> tags = ((UploadActivity)getActivity()).getTagsAdapter().getClickedTags();
+                Picture displayPicture = new Picture(displayBitmap, tags);
 
-                MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
+                HashMap<String, Picture> mapMarkerPictures = new HashMap<>();
+                mapMarkerPictures.put(currentMarker.getId(), displayPicture);
+
+                MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, mapMarkerPictures);
                 gMap.setInfoWindowAdapter(mapMarkerAdapter);
 
                 currentMarker.showInfoWindow();

@@ -56,16 +56,12 @@ public class AddTagFragment extends Fragment {
                 int width = capturedImageView.getMeasuredWidth();
                 int height = capturedImageView.getMeasuredHeight();
 
-                Bitmap croppedBitmap = Bitmap.createBitmap(
-                        capturedBitmap,
-                        0,
-                        (capturedBitmap.getHeight() - height) / 2,
-                        width,
-                        height
-                );
+                int xStart = 0;
+                int yStart = (capturedBitmap.getHeight() - height) / 2;
+                Bitmap croppedBitmap = Bitmap.createBitmap(capturedBitmap, xStart, yStart,
+                        width, height);
 
                 capturedImageView.setImageBitmap(croppedBitmap);
-
             }
         });
 

@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Button mapButton;
     private Button profileButton;
-    private Button cameraButton;
 
     public static final int MAP_PAGE = 0;
     public static final int CAMERA_PAGE = 1;
@@ -96,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         askForPermissions();
 
+        // firebase operations
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         addUserToFirebase(user);

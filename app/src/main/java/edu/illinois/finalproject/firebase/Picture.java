@@ -1,5 +1,6 @@
 package edu.illinois.finalproject.firebase;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -23,6 +24,7 @@ public class Picture {
     public List<String> tags;
     public String name;
     public String datetime;
+    private Bitmap bitmap;
 
     public Picture(String storageLocation, String uri, LatLng coord, List<String> tags, String name,
                    String datetime) {
@@ -34,6 +36,11 @@ public class Picture {
         this.coord = new HashMap<>();
         this.coord.put(LATITUDE, coord.latitude);
         this.coord.put(LONGITUDE, coord.longitude);
+    }
+
+    public Picture(Bitmap bitmap, List<String> tags) {
+        this.bitmap = bitmap;
+        this.tags = tags;
     }
 
     public Picture() {
@@ -62,5 +69,13 @@ public class Picture {
 
     public String getUri() {
         return uri;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

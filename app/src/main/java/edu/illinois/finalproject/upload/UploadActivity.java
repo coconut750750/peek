@@ -41,6 +41,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
@@ -257,7 +258,7 @@ public class UploadActivity extends AppCompatActivity {
         // create picture object to upload to firebase
         final String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
                 .format(new Date());
-
+        final List<String> tags = tagsAdapter.getClickedTags();
         uploadRef.putBytes(imageData)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -265,7 +266,7 @@ public class UploadActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, null, userId, timeStamp);
+                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, userId, timeStamp);
                 photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();
