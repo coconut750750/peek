@@ -49,6 +49,7 @@ public class UploadActivity extends AppCompatActivity {
     public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
     public static final String PHOTOS_REF = "photo_ids";
+    public static final String USER_PHOTOS_REF = "user_photos";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
 
@@ -245,8 +246,12 @@ public class UploadActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
                 .format(new Date());
         Picture capturedPicture = new Picture(storageLocation, photoCoord, null, userId, timeStamp);
+        photoRef.setValue(capturedPicture);
 
         // add picture id to user's list of picture ids
-        photoRef.setValue(capturedPicture);
+        DatabaseReference userPhotoRef = FirebaseDatabase.getInstance()
+                .getReference(USER_PHOTOS_REF)
+                .child(userId);
+        userPhotoRef.push().setValue(photoId);
     }
 }
