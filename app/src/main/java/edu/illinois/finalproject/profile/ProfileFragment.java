@@ -1,7 +1,5 @@
 package edu.illinois.finalproject.profile;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,20 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.map.MapManager;
-import edu.illinois.finalproject.upload.TagsAdapter;
-import edu.illinois.finalproject.upload.UploadActivity;
 
 /**
  *

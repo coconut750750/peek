@@ -92,6 +92,7 @@ public class UploadActivity extends AppCompatActivity {
         File photoFile = new File(photoPath);
         photoFile.delete();
 
+        // get current location
         // https://developer.android.com/training/location/retrieve-current.html
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -120,7 +121,6 @@ public class UploadActivity extends AppCompatActivity {
 
         tagFragment = new AddTagFragment();
         locationFragment = new ConfirmLocationFragment();
-
         commitFragment(tagFragment);
     }
 

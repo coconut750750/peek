@@ -23,11 +23,11 @@ import edu.illinois.finalproject.R;
 public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context context;
-    private Bitmap image;
+    private HashMap<String, Bitmap> bitmapMap;
 
-    public MapMarkerAdapter(Context context, Bitmap image) {
+    public MapMarkerAdapter(Context context, HashMap<String, Bitmap> bitmapMap) {
         this.context = context;
-        this.image = image;
+        this.bitmapMap = bitmapMap;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 //        textView.setText(String.format("%s, %s", markerPos.latitude, markerPos.longitude));
 
         ImageView imageView = (ImageView) v.findViewById(R.id.map_info_image);
-        imageView.setImageBitmap(image);
+        imageView.setImageBitmap(bitmapMap.get(marker.getId()));
         return v;
     }
 

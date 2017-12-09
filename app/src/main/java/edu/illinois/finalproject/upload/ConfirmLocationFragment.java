@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.map.MapMarkerAdapter;
 
@@ -97,9 +99,6 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
-                MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayBitmap);
-                gMap.setInfoWindowAdapter(mapMarkerAdapter);
-
                 double angle = 0.0;
                 float multiplier = 0.5f;
                 float offset = 0.5f;
@@ -108,6 +107,13 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
 
                 Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
                 currentMarker.setInfoWindowAnchor(x, y);
+
+                HashMap<String, Bitmap> displayImages = new HashMap<>();
+                displayImages.put(currentMarker.getId(), displayBitmap);
+
+                MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
+                gMap.setInfoWindowAdapter(mapMarkerAdapter);
+
                 currentMarker.showInfoWindow();
             }
         }
