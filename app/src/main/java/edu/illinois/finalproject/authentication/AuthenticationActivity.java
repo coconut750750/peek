@@ -33,7 +33,6 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     private GoogleApiClient mGoogleApiClient;
     private static final int SIGN_IN = 9001;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +56,6 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d("asdf", "hi"+user.getEmail()+" "+user.getUid());
-                    Log.d("asdf","logged in!");
                     Intent mainActivityIntent = new Intent(
                             AuthenticationActivity.this, MainActivity.class);
                     mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

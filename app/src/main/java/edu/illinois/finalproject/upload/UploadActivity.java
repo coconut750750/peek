@@ -7,21 +7,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,12 +22,23 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
+import edu.illinois.finalproject.firebase.Picture;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -42,7 +46,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * with a marker at the location where the photo was taken and the actual photo itself.
  */
 public class UploadActivity extends AppCompatActivity {
+    public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
 
+    public static final String PHOTOS_REF = "photo_ids";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
 
@@ -53,7 +59,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private FragmentTransaction transaction;
 
-    private UploadLocationFragment locationFragment;
+    private ConfirmLocationFragment locationFragment;
     private AddTagFragment tagFragment;
     private TagsAdapter tagsAdapter;
     private TextView toolbarTitle;
@@ -113,7 +119,7 @@ public class UploadActivity extends AppCompatActivity {
         clarifaiAsync.execute(capturedBitmap);
 
         tagFragment = new AddTagFragment();
-        locationFragment = new UploadLocationFragment();
+        locationFragment = new ConfirmLocationFragment();
 
         commitFragment(tagFragment);
     }
@@ -175,6 +181,8 @@ public class UploadActivity extends AppCompatActivity {
                 commitFragment(locationFragment);
                 break;
             case 1:
+                uploadPictureToFirebase();
+                finish();
                 break;
         }
         currentPage += 1;
@@ -213,5 +221,32 @@ public class UploadActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    private void uploadPictureToFirebase() {
+        // get photo and user id's
+        DatabaseReference photoRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF).push();
+        String photoId = photoRef.getKey();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String storageLocation = String.format("%s/%s.jpg", userId,  photoId);
+
+        // put photo into storage
+        //https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference capturedImageRef = storageRef.child(storageLocation);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        capturedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] foxData = baos.toByteArray();
+
+        capturedImageRef.putBytes(foxData);
+
+        // create picture object and upload to firebase
+        String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
+                .format(new Date());
+        Picture capturedPicture = new Picture(storageLocation, photoCoord, null, userId, timeStamp);
+
+        // add picture id to user's list of picture ids
+        photoRef.setValue(capturedPicture);
     }
 }

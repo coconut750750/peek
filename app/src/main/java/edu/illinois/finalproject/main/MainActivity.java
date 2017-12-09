@@ -14,6 +14,14 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -36,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int PROFILE_PAGE = 2;
 
     private FirebaseAuth mAuth;
+    public static final String USER_ID_REF = "user_ids";
+    private DatabaseReference userIdsRef;
+    private HashMap<String, String> allUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +115,33 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        addUserToFirebase(user);
+    }
+
+    private void addUserToFirebase(final FirebaseUser user) {
+        allUsers = new HashMap<>();
+        userIdsRef = FirebaseDatabase.getInstance().getReference(USER_ID_REF);
+        userIdsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {
+                };
+                HashMap<String, String> list = dataSnapshot.getValue(t);
+                if (list != null) {
+                    for (String uid : list.keySet()) {
+                        allUsers.put(uid, list.get(uid));
+                    }
+
+                    allUsers.put(user.getUid(), user.getEmail());
+                    userIdsRef.setValue(allUsers);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**

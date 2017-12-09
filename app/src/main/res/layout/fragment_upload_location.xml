@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.illinois.finalproject.upload.UploadLocationFragment">
+    tools:context="edu.illinois.finalproject.upload.ConfirmLocationFragment">
 
     <com.google.android.gms.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"

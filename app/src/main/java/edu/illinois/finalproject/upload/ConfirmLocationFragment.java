@@ -34,7 +34,7 @@ import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 /**
  *
  */
-public class UploadLocationFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
+public class ConfirmLocationFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
 
     private MapView mapView;
     private Context context;
@@ -43,7 +43,7 @@ public class UploadLocationFragment extends Fragment implements GoogleApiClient.
     private Bitmap displayBitmap;
     public static final float INFO_WINDOW_OFFSET = 0.1f;
 
-    public UploadLocationFragment() {
+    public ConfirmLocationFragment() {
         // Required empty public constructor
     }
 
