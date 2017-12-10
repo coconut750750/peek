@@ -1,17 +1,14 @@
-package edu.illinois.finalproject.map;
+package edu.illinois.finalproject.firebase;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.map.MapManager;
 
 /**
  * Created by Brandon on 12/9/17.

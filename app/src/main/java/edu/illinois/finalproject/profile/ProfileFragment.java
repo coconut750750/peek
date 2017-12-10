@@ -8,15 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.authentication.AuthenticationActivity;
@@ -29,6 +32,8 @@ import static edu.illinois.finalproject.authentication.AuthenticationActivity.mG
  */
 public class ProfileFragment extends Fragment {
 
+    private FirebaseUser user;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -36,7 +41,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -45,10 +50,15 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.page_profile, container, false);
 
-        //toolbar_upload
+        // set up toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        // set up profile image
+        ImageView profileImage = (ImageView) view.findViewById(R.id.profile_image);
+        new ProfileImageAsync(profileImage).execute(user.getPhotoUrl());
+
+        // set up recycler view of pics
         RecyclerView postRecyclerView = (RecyclerView) view.findViewById(R.id.posts_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -57,6 +67,13 @@ public class ProfileFragment extends Fragment {
         ProfilePictureAdapter pictureAdapter = new ProfilePictureAdapter(null);
         postRecyclerView.setAdapter(pictureAdapter);
 
+        // set up sign out button
+        setupSignOutButton(view);
+
+        return view;
+    }
+
+    private void setupSignOutButton(View view) {
         view.findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +110,5 @@ public class ProfileFragment extends Fragment {
                 );
             }
         });
-        return view;
     }
 }
