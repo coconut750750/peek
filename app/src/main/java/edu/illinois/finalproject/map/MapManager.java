@@ -112,6 +112,30 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                 gMap = googleMap;
                 gMap.getUiSettings().setMyLocationButtonEnabled(false);
                 gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    private Marker lastOpenned = null;
+
+                    // https://stackoverflow.com/questions/15925319/how-to-disable-android-map-marker-click-auto-center
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        // Check if there is an open info window
+                        if (lastOpenned != null) {
+                            // Close the info window
+                            lastOpenned.hideInfoWindow();
+
+                            // If the marker the same marker that was already open
+                            if (lastOpenned.equals(marker)) {
+                                lastOpenned = null;
+                                return true;
+                            }
+                        }
+
+                        marker.showInfoWindow();
+                        lastOpenned = marker;
+
+                        return true;
+                    }
+                });
             }
         });
         mapView.onResume();
@@ -131,13 +155,6 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
             MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
             gMap.setInfoWindowAdapter(mapMarkerAdapter);
-
-            gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    return false;
-                }
-            });
         }
     }
 

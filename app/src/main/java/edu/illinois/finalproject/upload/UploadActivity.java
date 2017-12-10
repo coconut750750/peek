@@ -54,11 +54,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * with a marker at the location where the photo was taken and the actual photo itself.
  */
 public class UploadActivity extends AppCompatActivity {
-    public static final String DATA_FORMAT = "yyyyMMdd_HHmmss";
+    public static final String DATA_FORMAT = "dd MMMM yyyy_hh:mm a";
 
     public static final String PHOTOS_REF = "photo_ids";
     public static final String USER_PHOTOS_REF = "user_photos";
-    public static final String UPLOADED_PICTURE_KEY = "uploaded_pic";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
 

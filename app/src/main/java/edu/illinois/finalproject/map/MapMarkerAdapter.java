@@ -25,7 +25,8 @@ import edu.illinois.finalproject.firebase.Picture;
 
 public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
-    public static final double DISPLAY_BITMAP_SCALE = 1 / 3f;
+    public static final String DATETIME_SEPARATOR = "_";
+    public static final double DISPLAY_BITMAP_SCALE = 1 / 2f;
     private Context context;
     private HashMap<String, Picture> pictureHashMap;
 
@@ -49,6 +50,15 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
             // set name
             TextView nameText = (TextView) v.findViewById(R.id.uploader_name);
             nameText.setText(markerPicture.getName());
+
+            // set datetime
+            String[] datetime = markerPicture.getDatetime().split(DATETIME_SEPARATOR);
+            String date = datetime[0];
+            TextView dateText = (TextView) v.findViewById(R.id.date);
+            dateText.setText(date);
+            String time = datetime[1];
+            TextView timeText = (TextView) v.findViewById(R.id.time);
+            timeText.setText(time);
         }
 
         // set image

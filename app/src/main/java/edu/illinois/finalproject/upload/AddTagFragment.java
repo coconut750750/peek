@@ -19,6 +19,8 @@ import edu.illinois.finalproject.R;
  */
 public class AddTagFragment extends Fragment {
 
+    private Bitmap capturedBitmap;
+
     public AddTagFragment() {
         // Required empty public constructor
     }
@@ -44,7 +46,7 @@ public class AddTagFragment extends Fragment {
         tagsAdapter.notifyDataSetChanged();
 
         final ImageView capturedImageView = (ImageView) view.findViewById(R.id.captured_image);
-        final Bitmap capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
+        capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
 
         // finds a cropped section of the picture to show the user
         // source: https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
@@ -61,6 +63,7 @@ public class AddTagFragment extends Fragment {
                 Bitmap croppedBitmap = Bitmap.createBitmap(capturedBitmap, xStart, yStart,
                         width, height);
 
+                capturedBitmap = croppedBitmap;
                 capturedImageView.setImageBitmap(croppedBitmap);
             }
         });
