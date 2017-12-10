@@ -31,6 +31,7 @@ import java.util.List;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.map.MapMarkerAdapter;
 
 import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
@@ -87,13 +88,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        int granted = PackageManager.PERMISSION_GRANTED;
-
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == granted ||
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == granted) {
-
+        if (MainActivity.fineLocationPermission || MainActivity.coarseLocationPermission) {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());

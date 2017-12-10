@@ -1,5 +1,6 @@
 package edu.illinois.finalproject.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -41,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int MAP_PAGE = 0;
     public static final int CAMERA_PAGE = 1;
     public static final int PROFILE_PAGE = 2;
+
+    // permissions
+    public static boolean fineLocationPermission;
+    public static boolean coarseLocationPermission;
 
     private FirebaseAuth mAuth;
     public static final String USER_ID_REF = "user_ids";
@@ -142,6 +147,13 @@ public class MainActivity extends AppCompatActivity {
         if (!hasPermissions(permissionsToAsk)) {
             ActivityCompat.requestPermissions(this, permissionsToAsk, PERMISSIONS_ALL);
         }
+
+        fineLocationPermission = ActivityCompat
+                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
+        coarseLocationPermission = ActivityCompat
+                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
     }
 
     /**

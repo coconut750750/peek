@@ -38,7 +38,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
     public static final float INFO_WINDOW_OFFSET = 0.1f;
     public static final float INFO_WINDOW_X = 0.5f;
-    public static final float INFO_WINDOW_Y = -1 + INFO_WINDOW_OFFSET;
+    public static final float INFO_WINDOW_Y = -0.5f + INFO_WINDOW_OFFSET;
 
     private Context context;
     private MapView mapView;

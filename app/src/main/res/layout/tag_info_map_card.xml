@@ -5,21 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="2dp"
     android:elevation="8dp"
-    android:layout_margin="8dp"
+    android:layout_margin="1dp"
     android:layout_gravity="center"
     android:id="@+id/tag_card_view"
     app:cardElevation="8dp">
 
     <TextView
         android:id="@+id/tag_view"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:padding="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tag"
-        android:textSize="@dimen/upload_tag_size"
+        android:textSize="@dimen/map_info_tag_size"
         android:textColor="@color/colorPrimaryDark"
         android:layout_gravity="center"
         android:textAppearance="@style/ralewayReg"/>

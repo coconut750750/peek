@@ -193,6 +193,11 @@ public class UploadActivity extends AppCompatActivity {
                 commitFragment(locationFragment);
                 break;
             case 1:
+                // show a progress dialog to users
+                progressDialog = new ProgressDialog(this, R.style.uploadDialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+                progressDialog.setMessage("Uploading...");
                 uploadPictureToFirebase();
                 break;
         }
@@ -235,18 +240,14 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void uploadPictureToFirebase() {
-        // show a progress dialog to users
-        progressDialog = new ProgressDialog(this, R.style.uploadDialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
-        progressDialog.setMessage("Uploading...");
-
-        // get photo and user id's
+        // get photo id and user info
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference photoRef = FirebaseDatabase.getInstance()
                 .getReference(PHOTOS_REF).push();
         final String photoId = photoRef.getKey();
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userId = user.getUid();
         final String uploadLoc = String.format("%s/%s.jpg", userId,  photoId);
+        final String userName = user.getDisplayName();
 
         // put photo into storage
         StorageReference uploadRef = FirebaseStorage.getInstance().getReference().child(uploadLoc);
@@ -266,7 +267,7 @@ public class UploadActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, userId, timeStamp);
+                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, userName, timeStamp);
                 photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();

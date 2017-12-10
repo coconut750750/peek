@@ -73,7 +73,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     public void onBindViewHolder(TagsAdapter.ViewHolder holder, int position) {
         TextView textView = holder.textView;
         textView.setText(tags.get(position));
-        textView.setTextSize(context.getResources().getDimension(R.dimen.upload_tag_size));
     }
 
     @Override

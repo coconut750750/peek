@@ -6,6 +6,6 @@
     <dimen name="capture_button_size_active">84dp</dimen>
     <dimen name="capture_button_size_inactive">72dp</dimen>
 
-    <dimen name="upload_tag_size">8dp</dimen>
-    <dimen name="map_info_tag_size">4dp</dimen>
+    <dimen name="upload_tag_size">16dp</dimen>
+    <dimen name="map_info_tag_size">12dp</dimen>
 </resources>
