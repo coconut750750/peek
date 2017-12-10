@@ -2,6 +2,7 @@ package edu.illinois.finalproject.profile;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.authentication.AuthenticationActivity;
+
+import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
 
 /**
  *
@@ -57,9 +59,36 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AuthenticationActivity.mAuth.signOut();
+                // connects to google api client, then signs out of Google
+                // source: https://stackoverflow.com/questions/38039320/googleapiclient-is-not-
+                // connected-yet-on-logout-when-using-firebase-auth-with-g
 
-                Auth.GoogleSignInApi.signOut(AuthenticationActivity.mGoogleApiClient);
+                mGoogleApiClient.connect();
+                mGoogleApiClient.registerConnectionCallbacks(
+                        new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            public void onConnected(@Nullable Bundle bundle) {
+                                FirebaseAuth.getInstance().signOut();
+
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                                        new ResultCallback<Status>() {
+                                            @Override
+                                            public void onResult(@NonNull Status status) {
+                                                if (status.isSuccess()) {
+                                                    getActivity().finish();
+                                                }
+                                            }
+
+                                        }
+                                );
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+                                // implementation needed but no functionality needed
+                            }
+                        }
+                );
             }
         });
         return view;
