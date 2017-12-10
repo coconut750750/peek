@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.authentication.AuthenticationActivity;
+import edu.illinois.finalproject.main.ProgressDialog;
 
 import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
 
@@ -59,6 +60,7 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog.show(getContext(), getResources().getString(R.string.signing_out));
                 // connects to google api client, then signs out of Google
                 // source: https://stackoverflow.com/questions/38039320/googleapiclient-is-not-
                 // connected-yet-on-logout-when-using-firebase-auth-with-g
@@ -93,6 +95,4 @@ public class ProfileFragment extends Fragment {
         });
         return view;
     }
-
-
 }

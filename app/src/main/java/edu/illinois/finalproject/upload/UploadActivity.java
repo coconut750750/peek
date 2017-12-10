@@ -2,7 +2,6 @@ package edu.illinois.finalproject.upload;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -47,6 +46,7 @@ import java.util.Locale;
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.main.ProgressDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -193,10 +193,7 @@ public class UploadActivity extends AppCompatActivity {
                 break;
             case 1:
                 // show a progress dialog to users
-                progressDialog = new ProgressDialog(this, R.style.uploadDialog);
-                progressDialog.setIndeterminate(true);
-                progressDialog.show();
-                progressDialog.setMessage("Uploading...");
+                ProgressDialog.show(this, getResources().getString(R.string.uploading) );
                 uploadPictureToFirebase();
                 break;
         }
@@ -263,7 +260,7 @@ public class UploadActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
+                ProgressDialog.hide();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
                 Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, userName, timeStamp);

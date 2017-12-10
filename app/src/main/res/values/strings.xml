@@ -4,4 +4,8 @@
     <string name="confirm_location">Confirm Location</string>
     <string name="add_tags">Add Tags</string>
 
+    <string name="signing_in">Signing In...</string>
+    <string name="uploading">Uploading...</string>
+    <string name="signing_out">Signing Out...</string>
+
 </resources>
