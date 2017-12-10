@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="edu.illinois.finalproject.authentication.AuthenticationActivity">
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in as Guest"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/google_sign_in"/>
 
 </RelativeLayout>

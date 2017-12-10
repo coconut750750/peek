@@ -5,12 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.main.MainActivity;
+import edu.illinois.finalproject.main.ProgressDialog;
 
 /**
  * https://www.youtube.com/watch?v=MFWZLYFD8yI
@@ -61,13 +65,20 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                     mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                    Log.d("asdf", "logged in!");
-
+                    ProgressDialog.hide();
                     startActivity(mainActivityIntent);
                     overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
                 }
             }
         };
+
+        SignInButton googleSignIn = (SignInButton) findViewById(R.id.google_sign_in);
+        googleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
     }
 
     @Override
@@ -75,8 +86,6 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
         mGoogleApiClient.connect();
-
-        signIn();
     }
 
     @Override
@@ -115,6 +124,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     }
 
     private void signIn() {
+        ProgressDialog.show(this, getResources().getString(R.string.signing_in));
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, SIGN_IN);
     }

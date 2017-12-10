@@ -21,7 +21,9 @@ public class ProgressDialog {
     }
 
     public static void hide() {
-        dialog.hide();
-        dialog = null;
+        if (dialog != null) {
+            dialog.hide();
+            dialog = null;
+        }
     }
 }
