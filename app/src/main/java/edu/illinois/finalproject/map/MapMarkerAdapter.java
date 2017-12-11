@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.firebase.PictureParser;
 
 /**
  * Created by Brandon on 12/4/17.
@@ -24,8 +25,6 @@ import edu.illinois.finalproject.firebase.Picture;
 
 public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
-    public static final String DATETIME_SEPARATOR = "_";
-    public static final double DISPLAY_BITMAP_SCALE = 1 / 2f;
     private Context context;
     private HashMap<String, Picture> pictureHashMap;
 
@@ -46,35 +45,11 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
             v = inflater.inflate(R.layout.map_info_incomplete, null);
         } else {
             v = inflater.inflate(R.layout.single_post_info_card, null);
-            // set name
-            TextView nameText = (TextView) v.findViewById(R.id.uploader_name);
-            nameText.setText(markerPicture.getName());
-
-            // set datetime
-            String[] datetime = markerPicture.getDatetime().split(DATETIME_SEPARATOR);
-            String date = datetime[0];
-            TextView dateText = (TextView) v.findViewById(R.id.date);
-            dateText.setText(date);
-            String time = datetime[1];
-            TextView timeText = (TextView) v.findViewById(R.id.time);
-            timeText.setText(time);
         }
 
-        // set image
-        ImageView imageView = (ImageView) v.findViewById(R.id.info_image);
-        Bitmap markerBitmap = markerPicture.getBitmap();
-        int newWidth = (int) (markerBitmap.getWidth() * DISPLAY_BITMAP_SCALE);
-        int newHeight = (int) (markerBitmap.getHeight() * DISPLAY_BITMAP_SCALE);
-        Bitmap displayBitmap = Bitmap.createScaledBitmap(markerBitmap, newWidth, newHeight, false);
-        imageView.setImageBitmap(displayBitmap);
+        View completeView = PictureParser.insertPicInfo(markerPicture, v);
 
-        // set tags
-        RecyclerView tagsRecycler = (RecyclerView) v.findViewById(R.id.info_tags_recycler);
-        tagsRecycler.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
-        MapInfoTagsAdapter infoTagsAdapter = new MapInfoTagsAdapter(context, markerPicture.getTags());
-        tagsRecycler.setAdapter(infoTagsAdapter);
-
-        return v;
+        return completeView;
     }
 
     @Override

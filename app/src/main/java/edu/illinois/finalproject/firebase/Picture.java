@@ -38,9 +38,11 @@ public class Picture {
         this.coord.put(LONGITUDE, coord.longitude);
     }
 
-    public Picture(Bitmap bitmap, List<String> tags) {
+    public Picture(Bitmap bitmap, List<String> tags, String name, String datetime) {
         this.bitmap = bitmap;
         this.tags = tags;
+        this.name = name;
+        this.datetime = datetime;
     }
 
     public Picture() {

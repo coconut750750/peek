@@ -31,7 +31,7 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
 
     @Override
     protected List<String> doInBackground(Bitmap... bitmaps) {
-        if (bitmaps == null) {
+        if (bitmaps[0] == null) {
             return null;
         }
 
@@ -52,6 +52,8 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
 
             return results;
 
+        } catch (OutOfMemoryError e) {
+            return null;
         } catch (java.util.NoSuchElementException e) {
             // throws this error if user quits the activity too early
             return null;

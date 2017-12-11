@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.firebase.PictureParser;
 
 /***
  * Created by Brandon on 12/6/17.
@@ -27,12 +29,12 @@ public class UserUploadsAdapter extends RecyclerView.Adapter<UserUploadsAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageView;
+        public View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.info_image);
+            this.itemView = itemView;
         }
     }
 
@@ -46,8 +48,7 @@ public class UserUploadsAdapter extends RecyclerView.Adapter<UserUploadsAdapter.
 
     @Override
     public void onBindViewHolder(UserUploadsAdapter.ViewHolder holder, int position) {
-        ImageView imageView = holder.imageView;
-        imageView.setImageBitmap(pictures.get(position).getBitmap());
+        PictureParser.insertPicInfo(pictures.get(position), holder.itemView);
     }
 
     @Override

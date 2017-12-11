@@ -2,6 +2,7 @@ package edu.illinois.finalproject.firebase;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,9 @@ public class MapFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
 
             return downloadPic;
         } catch (IOException e) {
+            return null;
+        } catch (OutOfMemoryError e) {
+            Log.d("asdf", downloadPic.getStorageLocation());
             return null;
         }
     }

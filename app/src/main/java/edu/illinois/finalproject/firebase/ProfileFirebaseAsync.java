@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +28,11 @@ public class ProfileFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
     @Override
     protected Picture doInBackground(Picture... pictures) {
         Picture downloadPic = pictures[0];
+
+        if (downloadPic == null) {
+            return null;
+        }
+
         String uri = downloadPic.getUri();
         try {
             URL url = new URL(uri);
@@ -39,6 +45,9 @@ public class ProfileFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
 
             return downloadPic;
         } catch (IOException e) {
+            return null;
+        } catch (OutOfMemoryError e) {
+            Log.d("asdf", downloadPic.getStorageLocation());
             return null;
         }
     }

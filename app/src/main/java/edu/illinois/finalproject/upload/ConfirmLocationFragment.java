@@ -41,6 +41,9 @@ import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
  */
 public class ConfirmLocationFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
 
+    public static final String NAME_KEY = "name";
+    public static final String DATETIME_KEY = "datetime";
+
     private MapView mapView;
     private Context context;
     private GoogleApiClient googleApiClient;
@@ -52,6 +55,16 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
 
     public ConfirmLocationFragment() {
         // Required empty public constructor
+    }
+
+    public static ConfirmLocationFragment newInstance(String name, String datetime) {
+        Bundle args = new Bundle();
+        args.putString(NAME_KEY, name);
+        args.putString(DATETIME_KEY, datetime);
+
+        ConfirmLocationFragment fragment = new ConfirmLocationFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -94,20 +107,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
                 LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
-                // add a marker to the for the new picture
-                Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
-                currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
-
-                List<String> tags = ((UploadActivity)getActivity()).getTagsAdapter().getClickedTags();
-                Picture displayPicture = new Picture(capturedBitmap, tags);
-
-                HashMap<String, Picture> mapMarkerPictures = new HashMap<>();
-                mapMarkerPictures.put(currentMarker.getId(), displayPicture);
-
-                MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, mapMarkerPictures);
-                gMap.setInfoWindowAdapter(mapMarkerAdapter);
-
-                currentMarker.showInfoWindow();
+                addMarker(location);
             }
         }
     }
@@ -115,5 +115,24 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
     @Override
     public void onConnectionSuspended(int i) {
         // need to implement but no functionality needed
+    }
+
+    private void addMarker(LatLng location) {
+        Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
+        currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
+
+        List<String> tags = ((UploadActivity)getActivity()).getTagsAdapter().getClickedTags();
+        String name = getArguments().getString(NAME_KEY);
+        String datetime = getArguments().getString(DATETIME_KEY);
+
+        Picture displayPicture = new Picture(capturedBitmap, tags, name, datetime);
+
+        HashMap<String, Picture> mapMarkerPictures = new HashMap<>();
+        mapMarkerPictures.put(currentMarker.getId(), displayPicture);
+
+        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, mapMarkerPictures);
+        gMap.setInfoWindowAdapter(mapMarkerAdapter);
+
+        currentMarker.showInfoWindow();
     }
 }

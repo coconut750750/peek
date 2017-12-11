@@ -40,6 +40,7 @@ import java.util.Locale;
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
 import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.main.ProgressDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -54,20 +55,21 @@ public class UploadActivity extends AppCompatActivity {
     public static final String USER_PHOTOS_REF = "user_photos";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
-
-    private Bitmap capturedBitmap;
-    private LatLng photoCoord;
-
-    private int currentPage = 0;
-
-    private FragmentTransaction transaction;
-
-    private ConfirmLocationFragment locationFragment;
-    private AddTagFragment tagFragment;
     private TagsAdapter tagsAdapter;
     private TextView toolbarTitle;
 
+    private Bitmap capturedBitmap;
+    private LatLng photoCoord;
+    private String timeStamp;
+    private String userId;
+    private String username;
+
     private ClarifaiAsync clarifaiAsync;
+
+    private FragmentTransaction transaction;
+    private ConfirmLocationFragment locationFragment;
+    private AddTagFragment tagFragment;
+    private int currentPage = 0;
 
     /**
      * Creates the activity and sets the views to private instance variables. It receives and intent
@@ -85,9 +87,7 @@ public class UploadActivity extends AppCompatActivity {
         String photoName = passedIntent.getStringExtra(CAPTURED_PHOTO_NAME);
         String photoPath = getFileStreamPath(photoName).getPath();
 
-        // read bitmap data from File object
-        // source: https://stackoverflow.com/questions/8710515/reading-an-image-file-into-
-        // bitmap-from-sdcard-why-am-i-getting-a-nullpointerexc
+        // get image
         // need to rotate image 90 degrees because camera saves image in landscape mode by default
         capturedBitmap = rotateImage(BitmapFactory.decodeFile(photoPath));
 
@@ -99,13 +99,7 @@ public class UploadActivity extends AppCompatActivity {
         // https://developer.android.com/training/location/retrieve-current.html
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        boolean fineLocationPermission = ActivityCompat
-                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
-        boolean coarseLocationPermission = ActivityCompat
-                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
-        if (fineLocationPermission || coarseLocationPermission) {
+        if (MainActivity.fineLocationPermission || MainActivity.coarseLocationPermission) {
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
@@ -118,12 +112,23 @@ public class UploadActivity extends AppCompatActivity {
                     });
         }
 
+        // get datetime
+        timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
+                .format(new Date());
+
+        // get user info
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
+        username = user.getDisplayName();
+
+        // get tags from clarifai
         tagsAdapter = new TagsAdapter(this);
         clarifaiAsync = new ClarifaiAsync(tagsAdapter);
         clarifaiAsync.execute(capturedBitmap);
 
+        // get fragments
         tagFragment = new AddTagFragment();
-        locationFragment = new ConfirmLocationFragment();
+        locationFragment = ConfirmLocationFragment.newInstance(username, timeStamp);
         commitFragment(tagFragment);
     }
 
@@ -229,13 +234,10 @@ public class UploadActivity extends AppCompatActivity {
 
     private void uploadPictureToFirebase() {
         // get photo id and user info
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference photoRef = FirebaseDatabase.getInstance()
                 .getReference(PHOTOS_REF).push();
         final String photoId = photoRef.getKey();
-        final String userId = user.getUid();
         final String uploadLoc = String.format("%s/%s.jpg", userId,  photoId);
-        final String userName = user.getDisplayName();
 
         // put photo into storage
         StorageReference uploadRef = FirebaseStorage.getInstance().getReference().child(uploadLoc);
@@ -245,8 +247,6 @@ public class UploadActivity extends AppCompatActivity {
         byte[] imageData = byteOutputStream.toByteArray();
 
         // create picture object to upload to firebase
-        final String timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
-                .format(new Date());
         final List<String> tags = tagsAdapter.getClickedTags();
         uploadRef.putBytes(imageData)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -255,7 +255,7 @@ public class UploadActivity extends AppCompatActivity {
                 ProgressDialog.hide();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, userName, timeStamp);
+                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, username, timeStamp);
                 photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();
