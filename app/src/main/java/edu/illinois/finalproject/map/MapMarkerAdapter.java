@@ -3,7 +3,6 @@ package edu.illinois.finalproject.map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
         if (markerPicture.getName() == null) {
             v = inflater.inflate(R.layout.map_info_incomplete, null);
         } else {
-            v = inflater.inflate(R.layout.map_info, null);
+            v = inflater.inflate(R.layout.single_post_info_card, null);
             // set name
             TextView nameText = (TextView) v.findViewById(R.id.uploader_name);
             nameText.setText(markerPicture.getName());
@@ -62,7 +61,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
         }
 
         // set image
-        ImageView imageView = (ImageView) v.findViewById(R.id.map_info_image);
+        ImageView imageView = (ImageView) v.findViewById(R.id.info_image);
         Bitmap markerBitmap = markerPicture.getBitmap();
         int newWidth = (int) (markerBitmap.getWidth() * DISPLAY_BITMAP_SCALE);
         int newHeight = (int) (markerBitmap.getHeight() * DISPLAY_BITMAP_SCALE);
@@ -70,7 +69,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
         imageView.setImageBitmap(displayBitmap);
 
         // set tags
-        RecyclerView tagsRecycler = (RecyclerView) v.findViewById(R.id.map_info_tags_recycler);
+        RecyclerView tagsRecycler = (RecyclerView) v.findViewById(R.id.info_tags_recycler);
         tagsRecycler.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
         MapInfoTagsAdapter infoTagsAdapter = new MapInfoTagsAdapter(context, markerPicture.getTags());
         tagsRecycler.setAdapter(infoTagsAdapter);

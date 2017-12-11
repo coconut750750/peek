@@ -27,7 +27,7 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/map_info_metadate_size"
+            android:textSize="@dimen/info_metadata_size"
             android:layout_margin="0dp"
             android:layout_marginStart="4dp"/>
 
@@ -35,21 +35,22 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/map_info_metadate_size"
+            android:textSize="@dimen/info_metadata_size"
             android:layout_margin="0dp"
             android:layout_marginStart="4dp"/>
 
         <ImageView
-            android:id="@+id/map_info_image"
+            android:id="@+id/info_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            android:padding="0dp"/>
+            android:padding="0dp"
+            android:adjustViewBounds="true"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/map_info_tags_recycler"
+            android:id="@+id/info_tags_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"

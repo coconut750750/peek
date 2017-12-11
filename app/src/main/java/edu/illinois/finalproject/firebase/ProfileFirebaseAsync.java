@@ -1,6 +1,8 @@
 package edu.illinois.finalproject.firebase;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -8,17 +10,18 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import edu.illinois.finalproject.map.MapManager;
+import edu.illinois.finalproject.profile.UserUploadsAdapter;
 
 /**
- * Created by Brandon on 12/9/17.
+ * Created by Brandon on 12/10/17.
  */
 
-public class FirebaseStorageAsync extends AsyncTask<Picture, Integer, Picture> {
-    private MapManager mapManager;
+public class ProfileFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
 
-    public FirebaseStorageAsync(MapManager mapManager) {
-        this.mapManager = mapManager;
+    private UserUploadsAdapter adapter;
+
+    public ProfileFirebaseAsync(UserUploadsAdapter adapter) {
+        this.adapter = adapter;
     }
 
     @Override
@@ -41,14 +44,12 @@ public class FirebaseStorageAsync extends AsyncTask<Picture, Integer, Picture> {
     }
 
     @Override
-    protected void onPostExecute(Picture picture) {
-        if (picture != null) {
-//            int newWidth = bitmap.getWidth() / 3;
-//            int newHeight = bitmap.getHeight() / 3;
-//            Bitmap displayPicture = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
-
-            mapManager.addPicture(picture);
-            mapManager.displayPicture(picture);
+    protected void onPostExecute(Picture downloadedPicture) {
+        if (downloadedPicture == null) {
+            return;
         }
+        super.onPostExecute(downloadedPicture);
+        adapter.addImages(downloadedPicture);
+        adapter.notifyDataSetChanged();
     }
 }

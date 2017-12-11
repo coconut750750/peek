@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import edu.illinois.finalproject.firebase.FirebaseStorageAsync;
+import edu.illinois.finalproject.firebase.MapFirebaseAsync;
 import edu.illinois.finalproject.firebase.Picture;
 
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class MapFragment extends Fragment {
                     for (String id : list.keySet()) {
                         Picture uploadedPicture = list.get(id);
 
-                        new FirebaseStorageAsync(mapManager).execute(uploadedPicture);
+                        new MapFirebaseAsync(mapManager).execute(uploadedPicture);
                     }
                 }
             }

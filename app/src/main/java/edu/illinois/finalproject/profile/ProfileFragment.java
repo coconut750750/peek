@@ -1,14 +1,16 @@
 package edu.illinois.finalproject.profile;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +22,35 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.authentication.AuthenticationActivity;
+import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.firebase.ProfileFirebaseAsync;
 import edu.illinois.finalproject.main.ProgressDialog;
 
 import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
+import static edu.illinois.finalproject.upload.UploadActivity.PHOTOS_REF;
+import static edu.illinois.finalproject.upload.UploadActivity.USER_PHOTOS_REF;
 
 /**
  *
  */
 public class ProfileFragment extends Fragment {
 
+    public static final String URI_KEY = "uri";
+
     private FirebaseUser user;
+    private UserUploadsAdapter postsAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -60,17 +78,55 @@ public class ProfileFragment extends Fragment {
 
         // set up recycler view of pics
         RecyclerView postRecyclerView = (RecyclerView) view.findViewById(R.id.posts_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false);
-        postRecyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        postRecyclerView.setLayoutManager(layoutManager);
+        postsAdapter = new UserUploadsAdapter();
+        postRecyclerView.setAdapter(postsAdapter);
 
-        ProfilePictureAdapter pictureAdapter = new ProfilePictureAdapter(null);
-        postRecyclerView.setAdapter(pictureAdapter);
+        // retrieve firebase uris
+        DatabaseReference uploadsRef = FirebaseDatabase.getInstance().getReference(USER_PHOTOS_REF)
+                .child(user.getUid());
+        uploadsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<HashMap<String, String>> t =
+                        new GenericTypeIndicator<HashMap<String, String>>() {};
+                HashMap<String, String> userPhotos = dataSnapshot.getValue(t);
+                if (userPhotos != null) {
+                    for (String uid : userPhotos.keySet()) {
+                        getImageBitmap(userPhotos.get(uid));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // need to implement, no functionality needed
+            }
+        });
+
 
         // set up sign out button
         setupSignOutButton(view);
 
         return view;
+    }
+
+    private void getImageBitmap(String imageId) {
+        DatabaseReference imageRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF)
+                .child(imageId);
+        imageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Picture picture = dataSnapshot.getValue(Picture.class);
+                new ProfileFirebaseAsync(postsAdapter).execute(picture);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // need to implement, no functionality needed
+            }
+        });
     }
 
     private void setupSignOutButton(View view) {

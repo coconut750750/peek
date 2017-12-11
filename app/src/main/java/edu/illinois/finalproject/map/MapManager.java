@@ -146,7 +146,8 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      */
     public void displayPicture(Picture picture) {
         if (picturesOnMap.contains(picture)) {
-            LatLng location = new LatLng(picture.getCoord().get(LATITUDE), picture.getCoord().get(LONGITUDE));
+            LatLng location = new LatLng(picture.getCoord().get(LATITUDE),
+                    picture.getCoord().get(LONGITUDE));
 
             Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
             currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
