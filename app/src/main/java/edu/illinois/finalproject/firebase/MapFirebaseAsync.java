@@ -40,7 +40,6 @@ public class MapFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
         } catch (IOException e) {
             return null;
         } catch (OutOfMemoryError e) {
-            Log.d("asdf", downloadPic.getStorageLocation());
             return null;
         }
     }

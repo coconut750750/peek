@@ -7,8 +7,7 @@
     android:elevation="8dp"
     android:layout_margin="1dp"
     android:layout_gravity="center"
-    android:id="@+id/tag_card_view"
-    app:cardElevation="16dp">
+    android:id="@+id/tag_card_view">
 
     <TextView
         android:id="@+id/tag_view"

@@ -39,13 +39,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v;
-
-        if (markerPicture.getName() == null) {
-            v = inflater.inflate(R.layout.map_info_incomplete, null);
-        } else {
-            v = inflater.inflate(R.layout.single_post_info_card, null);
-        }
+        View v = inflater.inflate(R.layout.single_post_info_card, null);
 
         View completeView = PictureParser.insertPicInfo(markerPicture, v);
 
