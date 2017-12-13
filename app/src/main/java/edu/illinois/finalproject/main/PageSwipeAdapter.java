@@ -33,7 +33,7 @@ public class PageSwipeAdapter extends FragmentStatePagerAdapter {
      * Returns the page fragment corresponding to the location of the page swiper. The first
      * page will be the map; the second, camera; the third, profile.
      *
-     * @param position int position of the location of the page swiper
+     * @param position int position of the location of the page swiper.
      * @return the Fragment at the position
      */
     @Override
