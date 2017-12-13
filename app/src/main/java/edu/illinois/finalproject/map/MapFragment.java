@@ -16,11 +16,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import edu.illinois.finalproject.picture.Picture;
-
 import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.picture.Picture;
 
 /**
  * This is the Map Fragments that will be displayed by the MainActivity. It displays a map with
@@ -51,10 +50,11 @@ public class MapFragment extends Fragment {
      * Object to take care of displaying Picture Objects on the MapView, and finally sets a
      * ValueEventListener to the Database Reference to the picture Ids such that when the app
      * retrieves Picture Objects, the listener gets MapManager to display the Picture.
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     *
+     * @param inflater           passed by the Android System, used to inflate a layout to a view
+     * @param container          passed by the Android System, where the new view will be contained
+     * @param savedInstanceState passed by the Android System,
+     * @return the View for the activity to display
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

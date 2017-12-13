@@ -121,10 +121,8 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
 
         Picture displayPicture = new Picture(capturedBitmap, tags, name, datetime);
 
-        HashMap<String, Picture> mapMarkerPictures = new HashMap<>();
-        mapMarkerPictures.put(currentMarker.getId(), displayPicture);
-
-        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, mapMarkerPictures);
+        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context);
+        mapMarkerAdapter.addPicture(currentMarker.getId(), displayPicture);
         gMap.setInfoWindowAdapter(mapMarkerAdapter);
 
         currentMarker.showInfoWindow();

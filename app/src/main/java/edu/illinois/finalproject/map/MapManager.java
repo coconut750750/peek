@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 
+import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.picture.Picture;
 
 import static edu.illinois.finalproject.picture.Picture.LATITUDE;
@@ -37,17 +38,16 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     public static final float INFO_WINDOW_X = 0.5f;
     public static final float INFO_WINDOW_Y = -0.5f + INFO_WINDOW_OFFSET;
 
-    private Context context;
     private MapView mapView;
     private GoogleApiClient googleApiClient;
     private GoogleMap gMap;
-    private HashMap<String, Picture> displayImages;
+
+    private MapMarkerAdapter mapMarkerAdapter;
 
     public MapManager(Context context, MapView mapView) {
-        this.context = context;
         this.mapView = mapView;
 
-        displayImages = new HashMap<>();
+        mapMarkerAdapter = new MapMarkerAdapter(context);
 
         // create a google api client to access location
         // source: https://stackoverflow.com/questions/38242917/how-can-i-get-the-current-location-
@@ -61,24 +61,19 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // permissions not granted so no map interaction
-            return;
-        }
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (lastLocation != null) {
-            double lat = lastLocation.getLatitude();
-            double lon = lastLocation.getLongitude();
+        if (MainActivity.coarseLocationPermission || MainActivity.fineLocationPermission) {
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            if (lastLocation != null) {
+                double lat = lastLocation.getLatitude();
+                double lon = lastLocation.getLongitude();
 
-            // moves camera of the map to the location of the picture with zoom of DEFAULT_ZOOM
-            // adds a marker to show where picture was taking
-            // shows where the user is currently
-            // https://developers.google.com/maps/documentation/android-api/map-with-marker
-            gMap.setMyLocationEnabled(true); // displays current location
-            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
+                // moves camera of the map to the location of the picture with zoom of DEFAULT_ZOOM
+                // adds a marker to show where picture was taking
+                // shows where the user is currently
+                // https://developers.google.com/maps/documentation/android-api/map-with-marker
+                gMap.setMyLocationEnabled(true); // displays current location
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
+            }
         }
     }
 
@@ -104,6 +99,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                 gMap = googleMap;
                 gMap.getUiSettings().setMyLocationButtonEnabled(false);
                 gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                gMap.setInfoWindowAdapter(mapMarkerAdapter);
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     private Marker lastOpenned = null;
 
@@ -144,9 +140,6 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
         currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
-        displayImages.put(currentMarker.getId(), picture);
-
-        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
-        gMap.setInfoWindowAdapter(mapMarkerAdapter);
+        mapMarkerAdapter.addPicture(currentMarker.getId(), picture);
     }
 }

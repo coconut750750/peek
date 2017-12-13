@@ -24,9 +24,9 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
     private HashMap<String, Picture> pictureHashMap;
     private HashMap<String, View> viewHashMap;
 
-    public MapMarkerAdapter(Context context, HashMap<String, Picture> pictureHashMap) {
+    public MapMarkerAdapter(Context context) {
         this.context = context;
-        this.pictureHashMap = pictureHashMap;
+        this.pictureHashMap = new HashMap<>();
         this.viewHashMap = new HashMap<>();
     }
 
@@ -54,5 +54,9 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
         return null;
+    }
+
+    public void addPicture(String id, Picture picture) {
+        pictureHashMap.put(id, picture);
     }
 }
