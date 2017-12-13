@@ -26,6 +26,16 @@ public class Picture {
     public String datetime;
     private Bitmap bitmap;
 
+    /**
+     * This constructor is used when a Picture is being ready to be uploading to Firebase
+     *
+     * @param storageLocation location where the picture is stored in firebase
+     * @param uri             uri of the image
+     * @param coord           geo location of the picture
+     * @param tags            list of tags of the picture
+     * @param name            string name of the uploader
+     * @param datetime        string when the picture was taken
+     */
     public Picture(String storageLocation, String uri, LatLng coord, List<String> tags, String name,
                    String datetime) {
         this.storageLocation = storageLocation;
@@ -38,6 +48,15 @@ public class Picture {
         this.coord.put(LONGITUDE, coord.longitude);
     }
 
+    /**
+     * This constructor is used when a Picture is ready to be displayed to the Map, but not ready
+     * to be uplaoded to Firebase
+     *
+     * @param bitmap   bitmap of the image
+     * @param tags     list of tags of the image
+     * @param name     name of uploader
+     * @param datetime string when the picture was taken
+     */
     public Picture(Bitmap bitmap, List<String> tags, String name, String datetime) {
         this.bitmap = bitmap;
         this.tags = tags;

@@ -1,6 +1,5 @@
 package edu.illinois.finalproject.picture;
 
-import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import edu.illinois.finalproject.R;
 
 /**
  * Created by Brandon on 12/9/17.
+ * This adapter is used to load the list of tags to the detailed picture view (which is displayed
+ * on the MapFragment, on the ProfileFragment, and on the ConfirmLocationFragment)
  */
 
 public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTagsAdapter.ViewHolder> {
@@ -30,11 +31,17 @@ public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTags
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             tagView = (TextView) itemView.findViewById(R.id.tag_view);
         }
     }
 
+    /**
+     * When the view is created, return a new ViewHolder with the view of the tag_info_map_card
+     *
+     * @param parent   passed by the Android System
+     * @param viewType passed by the Android System; this parameter is ignored
+     * @return a new ViewHolder with the layout for the tag
+     */
     @Override
     public PictureInfoTagsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext())
@@ -43,6 +50,12 @@ public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTags
         return new PictureInfoTagsAdapter.ViewHolder(cardView);
     }
 
+    /**
+     * When the ViewHolder binds, set the TextView to the tag from the list of InfoTags.
+     *
+     * @param holder   the ViewHolder that is being binded
+     * @param position the position of the ViewHolder
+     */
     @Override
     public void onBindViewHolder(PictureInfoTagsAdapter.ViewHolder holder, int position) {
         holder.tagView.setText(infoTags.get(position));

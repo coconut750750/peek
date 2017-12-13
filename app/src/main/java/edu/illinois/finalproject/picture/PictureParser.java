@@ -35,6 +35,7 @@ public class PictureParser {
     /**
      * This is the only public method that can be called. It take in a Picture Object and puts its
      * details into the pictureInfoView.
+     *
      * @param completePicture the Picture object that has all the requirements
      * @param pictureInfoView the layout that has all the views to hold the details
      * @return the final view with all the elements in its place
@@ -55,11 +56,23 @@ public class PictureParser {
         return pictureInfoView;
     }
 
+    /**
+     * Inserts name into the layout
+     *
+     * @param name            String name of picture uploader
+     * @param pictureInfoView the info view for the picture
+     */
     private static void insertPicName(String name, View pictureInfoView) {
         TextView nameText = (TextView) pictureInfoView.findViewById(R.id.uploader_name);
         nameText.setText(name);
     }
 
+    /**
+     * Inserts datetime into the layout
+     *
+     * @param datetime        String datetime of picture upload time
+     * @param pictureInfoView the info view for the picture
+     */
     private static void insertPicDatetime(String datetime, View pictureInfoView) {
         // set datetime
         String[] datetimeArr = datetime.split(DATETIME_SEPARATOR);
@@ -71,6 +84,13 @@ public class PictureParser {
         timeText.setText(time);
     }
 
+    /**
+     * Inserts bitmap into the layout, using the Glide Library. Used if the Bitmap of the
+     * Picture object is null.
+     *
+     * @param uri             String uri of where the bitmap is stored.
+     * @param pictureInfoView the info view for the picture
+     */
     private static void insertPicImage(String uri, View pictureInfoView) {
         // set image
         final ImageView imageView = (ImageView) pictureInfoView.findViewById(R.id.info_image);
@@ -89,6 +109,12 @@ public class PictureParser {
                 .into(target);
     }
 
+    /**
+     * Inserts bitmap into the layout
+     *
+     * @param bitmap          Bitmap of picture
+     * @param pictureInfoView the info view for the picture
+     */
     private static void insertPicImage(Bitmap bitmap, View pictureInfoView) {
         // set image
         final ImageView imageView = (ImageView) pictureInfoView.findViewById(R.id.info_image);
@@ -96,17 +122,29 @@ public class PictureParser {
         imageView.setImageBitmap(getScaledBitmap(bitmap));
     }
 
+    /**
+     * Returns a new Bitmap that is Scaled according to {DISPLAY_BITMAP_SCALE}
+     *
+     * @param bitmap the bitmap to be resized
+     */
     private static Bitmap getScaledBitmap(Bitmap bitmap) {
         int newWidth = (int) (bitmap.getWidth() * DISPLAY_BITMAP_SCALE);
         int newHeight = (int) (bitmap.getHeight() * DISPLAY_BITMAP_SCALE);
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
     }
 
+    /**
+     * Inserts picture tags into the layout, using the PictureInfoTagsAdapter
+     * @param tags list of tags of picture
+     * @param pictureInfoView the info view for the picture
+     */
     private static void insertPicTags(List<String> tags, View pictureInfoView) {
-        // set tags
         Context context = pictureInfoView.getContext();
-        RecyclerView tagsRecycler = (RecyclerView) pictureInfoView.findViewById(R.id.info_tags_recycler);
-        tagsRecycler.setLayoutManager(new GridLayoutManager(context, GRID_LAYOUT_SPAN, GridLayoutManager.VERTICAL, false));
+        RecyclerView tagsRecycler = (RecyclerView) pictureInfoView
+                .findViewById(R.id.info_tags_recycler);
+        tagsRecycler.setLayoutManager(new GridLayoutManager(context,
+                GRID_LAYOUT_SPAN, GridLayoutManager.VERTICAL, false));
+
         PictureInfoTagsAdapter infoTagsAdapter = new PictureInfoTagsAdapter(tags);
         tagsRecycler.setAdapter(infoTagsAdapter);
     }
