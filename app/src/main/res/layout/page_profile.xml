@@ -12,7 +12,7 @@
         android:id="@+id/profile_info"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:elevation="8dp">
 
         <include

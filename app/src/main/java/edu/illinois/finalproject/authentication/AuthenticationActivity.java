@@ -1,5 +1,6 @@
 package edu.illinois.finalproject.authentication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.main.ProgressDialog;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * https://www.youtube.com/watch?v=MFWZLYFD8yI
@@ -131,6 +133,15 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // need to implement
+    }
 
+    /**
+     * This method enables the library used to assign fonts to text on runtime
+     * Source: https://github.com/chrisjenx/Calligraphy
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
