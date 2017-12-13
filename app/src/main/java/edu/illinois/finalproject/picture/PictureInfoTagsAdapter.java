@@ -18,11 +18,9 @@ import edu.illinois.finalproject.R;
 
 public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTagsAdapter.ViewHolder> {
 
-    private Context context;
     private List<String> infoTags;
 
-    public PictureInfoTagsAdapter(Context context, List<String> tags) {
-        this.context = context;
+    public PictureInfoTagsAdapter(List<String> tags) {
         this.infoTags = tags;
     }
 

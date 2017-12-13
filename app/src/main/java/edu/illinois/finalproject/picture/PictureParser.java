@@ -107,7 +107,7 @@ public class PictureParser {
         Context context = pictureInfoView.getContext();
         RecyclerView tagsRecycler = (RecyclerView) pictureInfoView.findViewById(R.id.info_tags_recycler);
         tagsRecycler.setLayoutManager(new GridLayoutManager(context, GRID_LAYOUT_SPAN, GridLayoutManager.VERTICAL, false));
-        PictureInfoTagsAdapter infoTagsAdapter = new PictureInfoTagsAdapter(context, tags);
+        PictureInfoTagsAdapter infoTagsAdapter = new PictureInfoTagsAdapter(tags);
         tagsRecycler.setAdapter(infoTagsAdapter);
     }
 }

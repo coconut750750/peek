@@ -50,24 +50,53 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_marginTop="@dimen/margin"
-        android:id="@+id/clarifai_tag_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.33">
+        android:layout_weight="0.33"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin"
+        android:paddingEnd="@dimen/margin">
 
-    </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clarifai Suggested Tags"
+            android:textColor="@color/colorPrimaryDark"/>
 
-    <android.support.v7.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/clarifai_tag_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_marginTop="@dimen/margin"
-        android:id="@+id/custom_tag_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.33">
+        android:layout_weight="0.33"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin"
+        android:paddingEnd="@dimen/margin">
 
-    </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Custom Tags"
+            android:textColor="@color/colorAccent"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/custom_tag_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
 </LinearLayout>

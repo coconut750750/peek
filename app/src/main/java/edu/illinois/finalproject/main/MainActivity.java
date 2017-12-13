@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -35,23 +33,29 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
     // app defined constant to determine the permission that was requested
     public static final int PERMISSIONS_ALL = 1;
-    private ViewPager mViewPager;
-    private Button mapButton;
-    private Button profileButton;
 
+    // the Firebase node where all the userIds are stored
+    public static final String USER_ID_REF = "user_ids";
+
+    // each of these will be true if the user accepts the permission
+    public static boolean fineLocationPermission;
+    public static boolean coarseLocationPermission;
+
+    // the ViewPager pages of each page
     public static final int MAP_PAGE = 0;
     public static final int CAMERA_PAGE = 1;
     public static final int PROFILE_PAGE = 2;
 
-    // permissions
-    public static boolean fineLocationPermission;
-    public static boolean coarseLocationPermission;
+    private ViewPager mViewPager;
+    private Button mapButton;
+    private Button profileButton;
 
     private FirebaseAuth mAuth;
-    public static final String USER_ID_REF = "user_ids";
-    private DatabaseReference userIdsRef;
-    private HashMap<String, String> allUsers;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,29 +111,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addUserToFirebase(final FirebaseUser user) {
-        allUsers = new HashMap<>();
-        userIdsRef = FirebaseDatabase.getInstance().getReference(USER_ID_REF);
-        userIdsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {
-                };
-                HashMap<String, String> list = dataSnapshot.getValue(t);
-                if (list != null) {
-                    for (String uid : list.keySet()) {
-                        allUsers.put(uid, list.get(uid));
-                    }
-
-                    allUsers.put(user.getUid(), user.getDisplayName());
-                    userIdsRef.setValue(allUsers);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // need to implement but no functionality needed
-            }
-        });
+        DatabaseReference userIdRef = FirebaseDatabase.getInstance()
+                .getReference(USER_ID_REF)
+                .child(user.getUid());
+        userIdRef.setValue(user.getEmail());
     }
 
     /**

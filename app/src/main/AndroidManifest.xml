@@ -43,7 +43,8 @@
             <!--</intent-filter>-->
         </activity>
         <activity android:name=".upload.UploadActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>
