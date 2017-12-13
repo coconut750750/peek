@@ -1,4 +1,4 @@
-package edu.illinois.finalproject.map;
+package edu.illinois.finalproject.picture;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -16,12 +16,12 @@ import edu.illinois.finalproject.R;
  * Created by Brandon on 12/9/17.
  */
 
-public class MapInfoTagsAdapter extends RecyclerView.Adapter<MapInfoTagsAdapter.ViewHolder> {
+public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTagsAdapter.ViewHolder> {
 
     private Context context;
     private List<String> infoTags;
 
-    public MapInfoTagsAdapter(Context context, List<String> tags) {
+    public PictureInfoTagsAdapter(Context context, List<String> tags) {
         this.context = context;
         this.infoTags = tags;
     }
@@ -38,15 +38,15 @@ public class MapInfoTagsAdapter extends RecyclerView.Adapter<MapInfoTagsAdapter.
     }
 
     @Override
-    public MapInfoTagsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PictureInfoTagsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.tag_info_map_card, parent, false);
 
-        return new MapInfoTagsAdapter.ViewHolder(cardView);
+        return new PictureInfoTagsAdapter.ViewHolder(cardView);
     }
 
     @Override
-    public void onBindViewHolder(MapInfoTagsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PictureInfoTagsAdapter.ViewHolder holder, int position) {
         holder.tagView.setText(infoTags.get(position));
     }
 

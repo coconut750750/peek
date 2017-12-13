@@ -6,17 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.firebase.Picture;
-import edu.illinois.finalproject.firebase.PictureParser;
+import edu.illinois.finalproject.picture.Picture;
+import edu.illinois.finalproject.picture.PictureParser;
 
 /***
  * Created by Brandon on 12/6/17.

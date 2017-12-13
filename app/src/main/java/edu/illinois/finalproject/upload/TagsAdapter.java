@@ -22,7 +22,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     private List<String> tags;
     private List<String> clickedTags;
-    public static final int MAX_SUGGESTIONS = 8;
     private Context context;
     private boolean defaultClicked;
 
@@ -88,7 +87,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return Math.min(tags.size(), MAX_SUGGESTIONS);
+        return tags.size();
     }
 
     /**

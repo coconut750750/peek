@@ -1,13 +1,8 @@
 package edu.illinois.finalproject.map;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -15,8 +10,8 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.firebase.Picture;
-import edu.illinois.finalproject.firebase.PictureParser;
+import edu.illinois.finalproject.picture.Picture;
+import edu.illinois.finalproject.picture.PictureParser;
 
 /**
  * Created by Brandon on 12/4/17.

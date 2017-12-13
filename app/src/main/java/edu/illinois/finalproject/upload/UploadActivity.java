@@ -31,14 +31,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.picture.Picture;
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.main.ProgressDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;

@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.picture.Picture;
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.map.MapMarkerAdapter;
 

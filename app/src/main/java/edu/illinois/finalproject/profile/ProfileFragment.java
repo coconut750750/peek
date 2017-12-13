@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.picture.Picture;
 import edu.illinois.finalproject.main.ProgressDialog;
 
 import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;

@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.picture.Picture;
 
 import java.util.HashMap;
 

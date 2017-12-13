@@ -3,7 +3,6 @@ package edu.illinois.finalproject.map;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,14 +19,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import edu.illinois.finalproject.firebase.Picture;
+import edu.illinois.finalproject.picture.Picture;
 
-import static edu.illinois.finalproject.firebase.Picture.LATITUDE;
-import static edu.illinois.finalproject.firebase.Picture.LONGITUDE;
+import static edu.illinois.finalproject.picture.Picture.LATITUDE;
+import static edu.illinois.finalproject.picture.Picture.LONGITUDE;
 import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
 /***

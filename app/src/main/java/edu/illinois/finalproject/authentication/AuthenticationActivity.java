@@ -30,22 +30,34 @@ import edu.illinois.finalproject.main.ProgressDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
- * https://www.youtube.com/watch?v=MFWZLYFD8yI
+ * This activity is the first activity that will be loaded on the app if the user has not chosen
+ * an account to use for this app. It uses Firebase's Google Sign-in method.
+ *
+ * Source: https://www.youtube.com/watch?v=MFWZLYFD8yI
  */
-public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class AuthenticationActivity extends AppCompatActivity implements
+        GoogleApiClient.OnConnectionFailedListener{
+
+    private static final int SIGN_IN = 1234; // app defined source code
 
     public static FirebaseAuth mAuth;
     public static FirebaseAuth.AuthStateListener mAuthListener;
     public static GoogleApiClient mGoogleApiClient;
-    private static final int SIGN_IN = 9001;
 
+    /**
+     * When this activity is created, it configures the Google API Client used to sign in to
+     * Firebase with Google.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        // Configure Google Sign in options, the object that lets the user choose which Google
+        // account to use.
+        GoogleSignInOptions gso = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -55,8 +67,10 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // Configure Firebase Authentication object and listener
         mAuth = FirebaseAuth.getInstance();
 
+        // This listener is activated when the user successfully signed in
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -83,6 +97,10 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         });
     }
 
+    /**
+     * When this activity starts, put the Firebase Auth configurations together and connect the
+     * Google API Client
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -90,6 +108,9 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         mGoogleApiClient.connect();
     }
 
+    /**
+     * When this activity stops, disable the Authentication Listener
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -98,6 +119,13 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         }
     }
 
+    /**
+     * This method is called when the user signs into Google. Once the user does, sign into
+     * Firebase with that account.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -112,17 +140,14 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         }
     }
 
+    /**
+     * This method is called when the user is signed into Google. Using the Google Account, the app
+     * signs into Firebase.
+     * @param account
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        //showProgressDialog();
-
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //hideProgressDialog();
-                    }
-                });
+        mAuth.signInWithCredential(credential);
     }
 
     private void signIn() {
@@ -133,7 +158,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // need to implement
+        // need to implement, but no functionality needed
     }
 
     /**

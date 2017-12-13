@@ -1,16 +1,16 @@
-package edu.illinois.finalproject.firebase;
+package edu.illinois.finalproject.picture;
 
 import android.graphics.Bitmap;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.List;
 
-/***
+/**
  * Created by Brandon on 12/3/17.
+ * This is the Picture JSON Object that will be stored into the Firebase Database and that will be
+ * used to retrieve JSON Objects from Firebase.
  */
 
 public class Picture {
@@ -46,7 +46,7 @@ public class Picture {
     }
 
     public Picture() {
-        // need this to retrieve Picture from firebase
+        // need this empty constructor to retrieve Picture objects from Firebase
     }
 
     public String getStorageLocation() {
