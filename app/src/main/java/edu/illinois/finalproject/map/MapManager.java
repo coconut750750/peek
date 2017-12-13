@@ -113,6 +113,9 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                     // https://stackoverflow.com/questions/15925319/how-to-disable-android-map-marker-click-auto-center
                     @Override
                     public boolean onMarkerClick(Marker marker) {
+
+                        Log.d("asdf", "clicked");
+
                         // Check if there is an open info window
                         if (lastOpenned != null) {
                             // Close the info window
@@ -126,6 +129,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                         }
 
                         marker.showInfoWindow();
+                        Log.d("asdf", ""+marker.isInfoWindowShown());
                         lastOpenned = marker;
 
                         return true;

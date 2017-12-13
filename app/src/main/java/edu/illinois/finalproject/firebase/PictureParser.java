@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,9 +29,6 @@ public class PictureParser {
     private static final float DISPLAY_BITMAP_SCALE = 0.5f;
 
     public static View insertPicInfo(Picture completePicture, View pictureInfoView) {
-        if (completePicture.getBitmap() == null) {
-            return null;
-        }
         insertPicName(completePicture.getName(), pictureInfoView);
 
         insertPicDatetime(completePicture.getDatetime(), pictureInfoView);
