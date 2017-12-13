@@ -1,13 +1,9 @@
 package edu.illinois.finalproject.map;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -19,8 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
-
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.picture.Picture;
 
@@ -28,15 +22,22 @@ import static edu.illinois.finalproject.picture.Picture.LATITUDE;
 import static edu.illinois.finalproject.picture.Picture.LONGITUDE;
 import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
-/***
+/**
  * Created by Brandon on 12/3/17.
+ * This is a class to Manage the MapView of any activity, but primarily the MapFragment. It creates
+ * a GoogleApiClient to get the location and retrieve a Google Map object which will be displayed
+ * on a MapView (passed by the activity/fragment that is using this object). It also manages the
+ * locations and number of map markers that will be displayed. Finally, it also creates a
+ * MapMarkerAdapter which controls the view of the InfoWindow that pops up when a marker is clicked.
  */
 
 public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
-    public static final float INFO_WINDOW_OFFSET = 0.1f;
-    public static final float INFO_WINDOW_X = 0.5f;
-    public static final float INFO_WINDOW_Y = -0.5f + INFO_WINDOW_OFFSET;
+    // these three variables are used to adjust where the info window will be displayed. currently,
+    // the window is displayed directly above the marker with a small offset.
+    private static final float INFO_WINDOW_OFFSET = 0.1f;
+    private static final float INFO_WINDOW_X = 0.5f;
+    private static final float INFO_WINDOW_Y = -0.5f + INFO_WINDOW_OFFSET;
 
     private MapView mapView;
     private GoogleApiClient googleApiClient;
@@ -44,7 +45,15 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
     private MapMarkerAdapter mapMarkerAdapter;
 
-    public MapManager(Context context, MapView mapView) {
+    /**
+     * When creating a new MapManager, a MapView is needed to display the Map on. Also a context is
+     * needed for the MapMarkerAdapter and the Google API Client. This can be retrieved from the
+     * mapView object.
+     *
+     * @param mapView the MapView to display the GoogleMap onto
+     */
+    public MapManager(MapView mapView) {
+        Context context = mapView.getContext();
         this.mapView = mapView;
 
         mapMarkerAdapter = new MapMarkerAdapter(context);
@@ -59,32 +68,40 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         googleApiClient.connect();
     }
 
+    /**
+     * When the GoogleApiClient is connected, get the last known location. Then, display that
+     * location and move the camera to that location.
+     *
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (MainActivity.coarseLocationPermission || MainActivity.fineLocationPermission) {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (lastLocation != null) {
-                double lat = lastLocation.getLatitude();
-                double lon = lastLocation.getLongitude();
+            // this red line can be ignored because I do check that permissions are granted
+            // by using the static variables from the MainActivity
+            Location lastLoc = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+            if (lastLoc != null) {
+                LatLng currentLatLng = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
 
                 // moves camera of the map to the location of the picture with zoom of DEFAULT_ZOOM
-                // adds a marker to show where picture was taking
-                // shows where the user is currently
                 // https://developers.google.com/maps/documentation/android-api/map-with-marker
                 gMap.setMyLocationEnabled(true); // displays current location
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), DEFAULT_ZOOM));
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
             }
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        // need to implement but no functionality needed
     }
 
     /**
-     * Sets up the mapView and sets the Google Map object. Configured map settings to a default
-     * map type.
+     * Sets up the MapView and sets the Google Map object. Configured map settings to a default
+     * map type. Sets up the InfoWindowAdapter for the GoogleMap. Finally, sets an
+     * OnMarkerClickListener (which gives the app full control of how to react when a marker is
+     * clicked).
      *
      * @param savedInstanceState a bundle object the map view needs to create itself.
      */
@@ -103,16 +120,21 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     private Marker lastOpenned = null;
 
-                    // https://stackoverflow.com/questions/15925319/how-to-disable-android-map-marker-click-auto-center
+                    /**
+                     * Called when a Marker is clicked. It will do the exact same thing as the
+                     * default ClickListener, except that the GoogleMap camera will not
+                     * focus onto the marker, which was usually not helpful to users.
+                     *
+                     * Source: https://stackoverflow.com/questions/15925319/how-to-disable-android
+                     * -map-marker-click-auto-center
+                     * @param marker the marker that was clicked
+                     * @return always true to signal that the event was processed
+                     */
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-
-                        // Check if there is an open info window
                         if (lastOpenned != null) {
-                            // Close the info window
                             lastOpenned.hideInfoWindow();
 
-                            // If the marker the same marker that was already open
                             if (lastOpenned.equals(marker)) {
                                 lastOpenned = null;
                                 return true;
@@ -131,7 +153,10 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     }
 
     /**
+     * Takes in a Picture object and displays it on the map by creating a new Marker at the location
+     * of the Picture and then adding the Picture along with the marker ID to the MarkerAdatper.
      *
+     * @param picture the Picture object to display.
      */
     public void displayPicture(Picture picture) {
         LatLng location = new LatLng(picture.getCoord().get(LATITUDE),

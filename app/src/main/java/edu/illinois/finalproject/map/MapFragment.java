@@ -68,7 +68,7 @@ public class MapFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // instantiate a MapManager object
-        mapManager = new MapManager(getContext(), mapView);
+        mapManager = new MapManager(mapView);
         mapManager.startMap(savedInstanceState);
 
         // get Picture objects form Firebase, and then add them to the MapManager
