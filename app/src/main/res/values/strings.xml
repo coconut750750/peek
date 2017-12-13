@@ -7,5 +7,6 @@
     <string name="signing_in">Signing In...</string>
     <string name="uploading">Uploading...</string>
     <string name="signing_out">Signing Out...</string>
+    <string name="tags_hint">Custom tags</string>
 
 </resources>

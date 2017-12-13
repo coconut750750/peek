@@ -1,15 +1,12 @@
 package edu.illinois.finalproject.upload;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +30,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -55,7 +54,8 @@ public class UploadActivity extends AppCompatActivity {
     public static final String USER_PHOTOS_REF = "user_photos";
     public static final String CAPTURED_PHOTO_NAME = "photoName";
     public static final int DEFAULT_ZOOM = 15;
-    private TagsAdapter tagsAdapter;
+    private TagsAdapter clarifaiTagsAdapter;
+    private TagsAdapter customTagsAdapter;
     private TextView toolbarTitle;
 
     private Bitmap capturedBitmap;
@@ -122,9 +122,12 @@ public class UploadActivity extends AppCompatActivity {
         username = user.getDisplayName();
 
         // get tags from clarifai
-        tagsAdapter = new TagsAdapter(this);
-        clarifaiAsync = new ClarifaiAsync(tagsAdapter);
+        clarifaiTagsAdapter = new TagsAdapter(this, false);
+        clarifaiAsync = new ClarifaiAsync(clarifaiTagsAdapter);
         clarifaiAsync.execute(capturedBitmap);
+
+        // create custom tag adapter
+        customTagsAdapter = new TagsAdapter(this, true);
 
         // get fragments
         tagFragment = new AddTagFragment();
@@ -132,8 +135,18 @@ public class UploadActivity extends AppCompatActivity {
         commitFragment(tagFragment);
     }
 
-    public TagsAdapter getTagsAdapter() {
-        return tagsAdapter;
+    public TagsAdapter getClarifaiTagsAdapter() {
+        return clarifaiTagsAdapter;
+    }
+
+    public TagsAdapter getCustomTagsAdapter() {
+        return customTagsAdapter;
+    }
+
+    public List<String> getSelectedTags() {
+        List<String> allTags = new ArrayList<>(clarifaiTagsAdapter.getClickedTags());
+        allTags.addAll(customTagsAdapter.getClickedTags());
+        return allTags;
     }
 
     public Bitmap getCapturedBitmap() {
@@ -247,7 +260,7 @@ public class UploadActivity extends AppCompatActivity {
         byte[] imageData = byteOutputStream.toByteArray();
 
         // create picture object to upload to firebase
-        final List<String> tags = tagsAdapter.getClickedTags();
+        final List<String> tags = getSelectedTags();
         uploadRef.putBytes(imageData)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

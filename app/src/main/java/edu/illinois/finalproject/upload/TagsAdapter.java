@@ -1,6 +1,7 @@
 package edu.illinois.finalproject.upload;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,10 +24,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     private List<String> clickedTags;
     public static final int MAX_SUGGESTIONS = 8;
     private Context context;
+    private boolean defaultClicked;
 
-    public TagsAdapter(Context context) {
+    public TagsAdapter(Context context, boolean defaultClicked) {
         this.context = context;
         this.clickedTags =  new ArrayList<>();
+        this.tags = new ArrayList<>();
+        this.defaultClicked = defaultClicked;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,23 +45,30 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String tag = textView.getText().toString();
-                    clicked = !clicked;
-                    if (clicked) {
-                        textView.setTextColor(context.getResources()
-                                .getColor(R.color.colorAccent));
-                        if (!clickedTags.contains(tag)) {
-                            clickedTags.add(tag);
-                        }
-                    } else {
-                        textView.setTextColor(context.getResources()
-                                .getColor(R.color.colorPrimaryDark));
-                        if (clickedTags.contains(tag)) {
-                            clickedTags.remove(tag);
-                        }
-                    }
+                    clickTag();
                 }
             });
+            if (defaultClicked) {
+                clicked = !clicked;
+                textView.setTextColor(context.getColor(R.color.colorAccent));
+                clickedTags.add(tags.get(tags.size() - 1));
+            }
+        }
+
+        public void clickTag() {
+            String tag = tags.get(getPosition());
+            clicked = !clicked;
+            if (clicked) {
+                textView.setTextColor(context.getColor(R.color.colorAccent));
+                if (!clickedTags.contains(tag)) {
+                    clickedTags.add(tag);
+                }
+            } else {
+                textView.setTextColor(context.getColor(R.color.colorPrimaryDark));
+                if (clickedTags.contains(tag)) {
+                    clickedTags.remove(tag);
+                }
+            }
         }
     }
 
@@ -77,20 +88,17 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (tags == null) {
-            return 0;
-        }
         return Math.min(tags.size(), MAX_SUGGESTIONS);
     }
 
     /**
-     * @param tags
+     * @param tag
      */
-    public void setTagsList(List<String> tags) {
-        if (tags == null) {
+    public void addTags(String tag) {
+        if (tag == null) {
             return;
         }
-        this.tags = tags;
+        this.tags.add(tag);
     }
 
     public List<String> getClickedTags() {

@@ -63,7 +63,9 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
     @Override
     protected void onPostExecute(List<String> results) {
         if (results != null) {
-            adapter.setTagsList(results);
+            for (String tag : results) {
+                adapter.addTags(tag);
+            }
             adapter.notifyDataSetChanged();
         }
     }

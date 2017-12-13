@@ -27,23 +27,33 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context context;
     private HashMap<String, Picture> pictureHashMap;
+    private HashMap<String, View> viewHashMap;
 
     public MapMarkerAdapter(Context context, HashMap<String, Picture> pictureHashMap) {
         this.context = context;
         this.pictureHashMap = pictureHashMap;
+        this.viewHashMap = new HashMap<>();
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        Picture markerPicture = pictureHashMap.get(marker.getId());
+        String id = marker.getId();
+        if (viewHashMap.containsKey(id)) {
+            return viewHashMap.get(id);
+        } else {
+            Picture markerPicture = pictureHashMap.get(id);
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.single_post_info_card, null);
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = inflater.inflate(R.layout.single_post_info_card, null);
 
-        View completeView = PictureParser.insertPicInfo(markerPicture, v);
+            View completeView = PictureParser.insertPicInfo(markerPicture, v);
 
-        return completeView;
+            viewHashMap.put(id, completeView);
+
+            return completeView;
+        }
+
     }
 
     @Override

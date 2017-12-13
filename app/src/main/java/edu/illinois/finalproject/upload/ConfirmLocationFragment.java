@@ -1,20 +1,14 @@
 package edu.illinois.finalproject.upload;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -121,7 +115,7 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
         Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
         currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
-        List<String> tags = ((UploadActivity)getActivity()).getTagsAdapter().getClickedTags();
+        List<String> tags = ((UploadActivity)getActivity()).getSelectedTags();
         String name = getArguments().getString(NAME_KEY);
         String datetime = getArguments().getString(DATETIME_KEY);
 
