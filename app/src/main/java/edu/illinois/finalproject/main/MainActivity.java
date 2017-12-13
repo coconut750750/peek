@@ -13,14 +13,8 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -53,8 +47,15 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     /**
+     * When the MainActivity is created, configure the menu buttons, specifically, the map and the
+     * profile buttons such that when they are clicked, move the view pager to that page. Then,
+     * configure the ViewPager: add an PageSwipeAdapter so each page can be swiped to, add a
+     * PageTransformer to give each swipe an effect, set the current item to the Camera Page, then
+     * add a PageChangeListener for more effects for the buttons. Then, ask the user for the
+     * permissions needed by the app if the user has not already granted them. Finally, add the
+     * user's details into Firebase.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState the default Bundle passed by the Android system.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +111,33 @@ public class MainActivity extends AppCompatActivity {
         addUserToFirebase(user);
     }
 
-    private void addUserToFirebase(final FirebaseUser user) {
-        DatabaseReference userIdRef = FirebaseDatabase.getInstance()
-                .getReference(USER_ID_REF)
-                .child(user.getUid());
-        userIdRef.setValue(user.getEmail());
+    /**
+     * This method is invoked when the ViewPager's position is changed. This will move the menu
+     * buttons horizontally depending on which page the user is on. If the user is using the Camera,
+     * the buttons will move to the side so get out of the way; when the user is not, the buttons
+     * will move back to their original locations
+     *
+     * @param posRelativeToCamera a float representing the position relative to the Camera page. If
+     *                            the user is completely on another page, this number is 1. If the
+     *                            user is completely on the camera page, this number is 0.
+     */
+    public void adjustButtonMargins(float posRelativeToCamera) {
+        float displacementMult = 0.5f; // how much to move relative to the buttons original position
+        float initialDisplacement = 0.5f; // farthest they will move relative to original position
+        posRelativeToCamera = posRelativeToCamera * displacementMult + initialDisplacement;
+
+        int margin = (int) getResources().getDimension(R.dimen.menu_button_margin);
+        int percentMargin = (int) (margin * posRelativeToCamera);
+
+        RelativeLayout.LayoutParams mapButtonLayout =
+                (RelativeLayout.LayoutParams) mapButton.getLayoutParams();
+        mapButtonLayout.setMarginStart(percentMargin);
+        mapButton.setLayoutParams(mapButtonLayout);
+
+        RelativeLayout.LayoutParams profileButtonLayout =
+                (RelativeLayout.LayoutParams) profileButton.getLayoutParams();
+        profileButtonLayout.setMarginEnd(percentMargin);
+        profileButton.setLayoutParams(profileButtonLayout);
     }
 
     /**
@@ -161,6 +184,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * This method adds the FirebaseUser's data into Firebase.
+     *
+     * @param user the current user
+     */
+    private void addUserToFirebase(final FirebaseUser user) {
+        DatabaseReference userIdRef = FirebaseDatabase.getInstance()
+                .getReference(USER_ID_REF)
+                .child(user.getUid());
+        userIdRef.setValue(user.getEmail());
+    }
+
+    /**
      * This method enables the library used to assign fonts to text on runtime
      * Source: https://github.com/chrisjenx/Calligraphy
      *
@@ -169,29 +204,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    /**
-     * move the menu buttons off the screen
-     *
-     * @param posRelativeToCamera
-     */
-    public void adjustButtonMargins(float posRelativeToCamera) {
-        float displacementMult = 0.5f;
-        float initialDisplacement = 0.5f;
-        posRelativeToCamera = posRelativeToCamera * displacementMult + initialDisplacement;
-
-        int margin = (int) getResources().getDimension(R.dimen.menu_button_margin);
-        int percentMargin = (int) (margin * posRelativeToCamera);
-
-        RelativeLayout.LayoutParams mapButtonLayout =
-                (RelativeLayout.LayoutParams) mapButton.getLayoutParams();
-        mapButtonLayout.setMarginStart(percentMargin);
-        mapButton.setLayoutParams(mapButtonLayout);
-
-        RelativeLayout.LayoutParams profileButtonLayout =
-                (RelativeLayout.LayoutParams) profileButton.getLayoutParams();
-        profileButtonLayout.setMarginEnd(percentMargin);
-        profileButton.setLayoutParams(profileButtonLayout);
     }
 }

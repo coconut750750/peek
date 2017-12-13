@@ -1,7 +1,6 @@
 package edu.illinois.finalproject.upload;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     public TagsAdapter(Context context, boolean defaultClicked) {
         this.context = context;
-        this.clickedTags =  new ArrayList<>();
+        this.clickedTags = new ArrayList<>();
         this.tags = new ArrayList<>();
         this.defaultClicked = defaultClicked;
     }
@@ -50,7 +49,10 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             if (defaultClicked) {
                 clicked = !clicked;
                 textView.setTextColor(context.getColor(R.color.colorAccent));
-                clickedTags.add(tags.get(tags.size() - 1));
+                String lastTag = tags.get(tags.size() - 1);
+                if (!clickedTags.contains(lastTag)) {
+                    clickedTags.add(lastTag);
+                }
             }
         }
 
@@ -94,10 +96,10 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
      * @param tag
      */
     public void addTags(String tag) {
-        if (tag == null) {
+        if (tag == null || tags.contains(tag)) {
             return;
         }
-        this.tags.add(tag);
+        tags.add(tag);
     }
 
     public List<String> getClickedTags() {

@@ -55,15 +55,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.33"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/margin"
-        android:paddingEnd="@dimen/margin">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Clarifai Suggested Tags"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="@dimen/margin"/>
 
         <android.support.v7.widget.RecyclerView
 
@@ -80,15 +79,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.33"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/margin"
-        android:paddingEnd="@dimen/margin">
-
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Custom Tags"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent"
+            android:layout_marginStart="@dimen/margin"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/custom_tag_recycler"
