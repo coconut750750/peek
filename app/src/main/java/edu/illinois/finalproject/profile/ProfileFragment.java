@@ -106,6 +106,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // set up sign out button
+        setupSignOutButton(view);
+
         return view;
     }
 
@@ -126,6 +129,45 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // need to implement, no functionality needed
+            }
+        });
+    }
+
+    private void setupSignOutButton(View view) {
+        view.findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProgressDialog.show(getContext(), getResources().getString(R.string.signing_out));
+                // connects to google api client, then signs out of Google
+                // source: https://stackoverflow.com/questions/38039320/googleapiclient-is-not-
+                // connected-yet-on-logout-when-using-firebase-auth-with-g
+
+                mGoogleApiClient.connect();
+                mGoogleApiClient.registerConnectionCallbacks(
+                        new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            public void onConnected(@Nullable Bundle bundle) {
+                                FirebaseAuth.getInstance().signOut();
+
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                                        new ResultCallback<Status>() {
+                                            @Override
+                                            public void onResult(@NonNull Status status) {
+                                                if (status.isSuccess()) {
+                                                    getActivity().finish();
+                                                }
+                                            }
+
+                                        }
+                                );
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+                                // implementation needed but no functionality needed
+                            }
+                        }
+                );
             }
         });
     }

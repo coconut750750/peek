@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_main"/>
+        layout="@layout/toolbar_profile"/>
 
     <android.support.v7.widget.CardView
         android:id="@+id/profile_info"

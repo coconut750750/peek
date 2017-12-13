@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +26,6 @@ import java.util.HashMap;
 
 import edu.illinois.finalproject.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
 
 /**
  * This is the main activity and users will see when using the app. It consists of three main
@@ -112,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         addUserToFirebase(user);
-
-        // set up sign out button
-        setupSignOutButton();
     }
 
     private void addUserToFirebase(final FirebaseUser user) {
@@ -219,44 +208,5 @@ public class MainActivity extends AppCompatActivity {
                 (RelativeLayout.LayoutParams) profileButton.getLayoutParams();
         profileButtonLayout.setMarginEnd(percentMargin);
         profileButton.setLayoutParams(profileButtonLayout);
-    }
-
-    private void setupSignOutButton() {
-        findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ProgressDialog.show(MainActivity.this, getResources().getString(R.string.signing_out));
-                // connects to google api client, then signs out of Google
-                // source: https://stackoverflow.com/questions/38039320/googleapiclient-is-not-
-                // connected-yet-on-logout-when-using-firebase-auth-with-g
-
-                mGoogleApiClient.connect();
-                mGoogleApiClient.registerConnectionCallbacks(
-                        new GoogleApiClient.ConnectionCallbacks() {
-                            @Override
-                            public void onConnected(@Nullable Bundle bundle) {
-                                FirebaseAuth.getInstance().signOut();
-
-                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                                        new ResultCallback<Status>() {
-                                            @Override
-                                            public void onResult(@NonNull Status status) {
-                                                if (status.isSuccess()) {
-                                                    finish();
-                                                }
-                                            }
-
-                                        }
-                                );
-                            }
-
-                            @Override
-                            public void onConnectionSuspended(int i) {
-                                // implementation needed but no functionality needed
-                            }
-                        }
-                );
-            }
-        });
     }
 }
