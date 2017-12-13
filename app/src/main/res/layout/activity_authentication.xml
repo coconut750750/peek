@@ -6,17 +6,23 @@
     android:layout_height="match_parent"
     tools:context="edu.illinois.finalproject.authentication.AuthenticationActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_main"/>
+
+    <ImageView
+        android:id="@+id/login_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/peek_login"
+        android:layout_margin="@dimen/margin"/>
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
-
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Sign in as Guest"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_below="@+id/google_sign_in"/>-->
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/login_image"/>
 
 </RelativeLayout>

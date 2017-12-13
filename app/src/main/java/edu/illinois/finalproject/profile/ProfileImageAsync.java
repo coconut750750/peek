@@ -63,5 +63,7 @@ public class ProfileImageAsync extends AsyncTask<Uri, Integer, Bitmap> {
         canvas.drawCircle(width / 2, height / 2, radius, paint);
 
         profileView.setImageBitmap(canvasBitmap);
+        bitmap = null;
+        canvasBitmap = null;
     }
 }

@@ -59,5 +59,6 @@ public class ProfileFirebaseAsync extends AsyncTask<Picture, Integer, Picture> {
         super.onPostExecute(downloadedPicture);
         adapter.addImages(downloadedPicture);
         adapter.notifyDataSetChanged();
+        downloadedPicture = null;
     }
 }
