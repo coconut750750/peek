@@ -44,17 +44,12 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     private MapView mapView;
     private GoogleApiClient googleApiClient;
     private GoogleMap gMap;
-    private List<Picture> picturesOnMap;
     private HashMap<String, Picture> displayImages;
 
-    public MapManager(Context context, MapView mapView, List<Picture> picturesOnMap) {
+    public MapManager(Context context, MapView mapView) {
         this.context = context;
         this.mapView = mapView;
-        if (picturesOnMap == null) {
-            this.picturesOnMap = new ArrayList<>();
-        } else {
-            this.picturesOnMap = picturesOnMap;
-        }
+
         displayImages = new HashMap<>();
 
         // create a google api client to access location
@@ -145,21 +140,15 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      *
      */
     public void displayPicture(Picture picture) {
-        if (picturesOnMap.contains(picture)) {
-            LatLng location = new LatLng(picture.getCoord().get(LATITUDE),
-                    picture.getCoord().get(LONGITUDE));
+        LatLng location = new LatLng(picture.getCoord().get(LATITUDE),
+                picture.getCoord().get(LONGITUDE));
 
-            Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
-            currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
+        Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
+        currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
-            displayImages.put(currentMarker.getId(), picture);
+        displayImages.put(currentMarker.getId(), picture);
 
-            MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
-            gMap.setInfoWindowAdapter(mapMarkerAdapter);
-        }
-    }
-
-    public void addPicture(Picture picture) {
-        this.picturesOnMap.add(picture);
+        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context, displayImages);
+        gMap.setInfoWindowAdapter(mapMarkerAdapter);
     }
 }

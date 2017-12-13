@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import edu.illinois.finalproject.firebase.MapFirebaseAsync;
 import edu.illinois.finalproject.firebase.Picture;
 
 import java.util.HashMap;
@@ -40,7 +39,23 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.page_map, container, false);
+        mapView = (MapView) view.findViewById(R.id.map);
+
+        mapManager = new MapManager(getContext(), mapView);
+        mapManager.startMap(savedInstanceState);
+
+        //toolbar_upload
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // get firebase
         photoIdRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF);
         photoIdRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -52,7 +67,7 @@ public class MapFragment extends Fragment {
                     for (String id : list.keySet()) {
                         Picture uploadedPicture = list.get(id);
 
-                        new MapFirebaseAsync(mapManager).execute(uploadedPicture);
+                        mapManager.displayPicture(uploadedPicture);
                     }
                 }
             }
@@ -62,21 +77,6 @@ public class MapFragment extends Fragment {
                 // need to implement but no functionality needed
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.page_map, container, false);
-        mapView = (MapView) view.findViewById(R.id.map);
-
-        mapManager = new MapManager(getContext(), mapView, null);
-        mapManager.startMap(savedInstanceState);
-
-        //toolbar_upload
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         return view;
     }

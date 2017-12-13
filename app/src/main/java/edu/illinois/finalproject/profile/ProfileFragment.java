@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -35,8 +36,8 @@ import java.util.List;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.firebase.Picture;
-import edu.illinois.finalproject.firebase.ProfileFirebaseAsync;
 import edu.illinois.finalproject.main.ProgressDialog;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
 import static edu.illinois.finalproject.upload.UploadActivity.PHOTOS_REF;
@@ -72,15 +73,15 @@ public class ProfileFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        // set up profile image
+        // set up profile image using glide
         ImageView profileImage = (ImageView) view.findViewById(R.id.profile_image);
-        new ProfileImageAsync(profileImage).execute(user.getPhotoUrl());
+        Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
 
         // set up recycler view of pics
         RecyclerView postRecyclerView = (RecyclerView) view.findViewById(R.id.posts_recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         postRecyclerView.setLayoutManager(layoutManager);
-        postsAdapter = new UserUploadsAdapter();
+        postsAdapter = new UserUploadsAdapter(getContext());
         postRecyclerView.setAdapter(postsAdapter);
 
         // retrieve firebase uris
@@ -105,7 +106,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
         // set up sign out button
         setupSignOutButton(view);
 
@@ -119,7 +119,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Picture picture = dataSnapshot.getValue(Picture.class);
-                new ProfileFirebaseAsync(postsAdapter).execute(picture);
+
+                postsAdapter.addImages(picture);
+                postsAdapter.notifyDataSetChanged();
             }
 
             @Override

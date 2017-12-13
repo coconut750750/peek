@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+
 import java.util.List;
 
 import edu.illinois.finalproject.R;
@@ -30,7 +35,7 @@ public class PictureParser {
 
         insertPicDatetime(completePicture.getDatetime(), pictureInfoView);
 
-        insertPicImage(completePicture.getBitmap(), pictureInfoView);
+        insertPicImage(completePicture.getUri(), pictureInfoView);
 
         insertPicTags(completePicture.getTags(), pictureInfoView);
 
@@ -53,14 +58,25 @@ public class PictureParser {
         timeText.setText(time);
     }
 
-    private static void insertPicImage(Bitmap bitmap, View pictureInfoView) {
+    private static void insertPicImage(String uri, View pictureInfoView) {
         // set image
-        ImageView imageView = (ImageView) pictureInfoView.findViewById(R.id.info_image);
-        Bitmap markerBitmap = bitmap;
-        int newWidth = (int) (markerBitmap.getWidth() * DISPLAY_BITMAP_SCALE);
-        int newHeight = (int) (markerBitmap.getHeight() * DISPLAY_BITMAP_SCALE);
-        Bitmap displayBitmap = Bitmap.createScaledBitmap(markerBitmap, newWidth, newHeight, false);
-        imageView.setImageBitmap(displayBitmap);
+        final ImageView imageView = (ImageView) pictureInfoView.findViewById(R.id.info_image);
+
+        //https://github.com/codepath/android_guides/wiki/Displaying-Images-with-the-Glide-Library
+        SimpleTarget target = new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+                int newWidth = (int) (bitmap.getWidth() * DISPLAY_BITMAP_SCALE);
+                int newHeight = (int) (bitmap.getHeight() * DISPLAY_BITMAP_SCALE);
+                Bitmap displayBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+                imageView.setImageBitmap(displayBitmap);
+            }
+        };
+
+        Glide.with(pictureInfoView.getContext())
+                .load(uri)
+                .asBitmap()
+                .into(target);
     }
 
     private static void insertPicTags(List<String> tags, View pictureInfoView) {
@@ -71,17 +87,4 @@ public class PictureParser {
         MapInfoTagsAdapter infoTagsAdapter = new MapInfoTagsAdapter(context, tags);
         tagsRecycler.setAdapter(infoTagsAdapter);
     }
-
-//    if (markerPicture.getName() == null) {
-//        v = inflater.inflate(R.layout.map_info_incomplete, null);
-//    } else {
-//        v = inflater.inflate(R.layout.single_post_info_card, null);
-//
-//
-//    }
-//
-
-//
-
-
 }
