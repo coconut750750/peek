@@ -25,6 +25,7 @@ import edu.illinois.finalproject.map.MapInfoTagsAdapter;
 
 public class PictureParser {
 
+    public static final int GRID_LAYOUT_SPAN = 2;
     private static final String DATETIME_SEPARATOR = "_";
     private static final float DISPLAY_BITMAP_SCALE = 0.5f;
 
@@ -81,7 +82,7 @@ public class PictureParser {
         // set tags
         Context context = pictureInfoView.getContext();
         RecyclerView tagsRecycler = (RecyclerView) pictureInfoView.findViewById(R.id.info_tags_recycler);
-        tagsRecycler.setLayoutManager(new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false));
+        tagsRecycler.setLayoutManager(new GridLayoutManager(context, GRID_LAYOUT_SPAN, GridLayoutManager.VERTICAL, false));
         MapInfoTagsAdapter infoTagsAdapter = new MapInfoTagsAdapter(context, tags);
         tagsRecycler.setAdapter(infoTagsAdapter);
     }
