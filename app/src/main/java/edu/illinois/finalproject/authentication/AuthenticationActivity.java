@@ -141,10 +141,11 @@ public class AuthenticationActivity extends AppCompatActivity implements
      * This method is called when the user is signed into Google. Using the Google Account, the app
      * signs into Firebase.
      *
-     * @param account
+     * @param account the Google account the user signed in with
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        AuthCredential credential = GoogleAuthProvider
+                .getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential);
     }
 

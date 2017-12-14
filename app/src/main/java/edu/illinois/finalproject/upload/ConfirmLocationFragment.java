@@ -79,7 +79,8 @@ public class ConfirmLocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_upload_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_upload_location,
+                container, false);
 
         mapView = (MapView) view.findViewById(R.id.map);
 

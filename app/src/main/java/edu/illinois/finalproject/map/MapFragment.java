@@ -28,9 +28,7 @@ import edu.illinois.finalproject.picture.Picture;
 public class MapFragment extends Fragment {
     // the Firebase node of where all the photos ids are stored
     public static final String PHOTOS_REF = "photo_ids";
-    private DatabaseReference photoIdRef;
 
-    private MapView mapView;
     private MapManager mapManager;
 
     /**
@@ -61,7 +59,7 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.page_map, container, false);
-        mapView = (MapView) view.findViewById(R.id.map);
+        MapView mapView = (MapView) view.findViewById(R.id.map);
 
         // set the toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -72,12 +70,14 @@ public class MapFragment extends Fragment {
         mapManager.startMap(savedInstanceState);
 
         // get Picture objects form Firebase, and then add them to the MapManager
-        photoIdRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF);
+        DatabaseReference photoIdRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF);
         photoIdRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<HashMap<String, Picture>> t = new GenericTypeIndicator<HashMap<String, Picture>>() {
-                };
+                GenericTypeIndicator<HashMap<String, Picture>> t = new
+                        GenericTypeIndicator<HashMap<String, Picture>>() {
+
+                        };
                 HashMap<String, Picture> list = dataSnapshot.getValue(t);
                 if (list != null) {
                     for (String id : list.keySet()) {

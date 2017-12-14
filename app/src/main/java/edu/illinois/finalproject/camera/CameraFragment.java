@@ -39,7 +39,6 @@ public class CameraFragment extends Fragment {
     private TextureView mTextureView;
     private CameraTextureListener mTextureListener;
     private Camera mCamera;
-    private Button captureButton;
 
     /**
      * Picture Callback object the camera will use when taking a photo. When a picture is taken,
@@ -97,7 +96,7 @@ public class CameraFragment extends Fragment {
         View view = inflater.inflate(R.layout.page_camera, container, false);
         mTextureView = (TextureView) view.findViewById(R.id.camera_view);
 
-        captureButton = (Button) view.findViewById(R.id.take_picture);
+        Button captureButton = (Button) view.findViewById(R.id.take_picture);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

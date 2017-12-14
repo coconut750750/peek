@@ -17,7 +17,8 @@ import edu.illinois.finalproject.R;
  * on the MapFragment, on the ProfileFragment, and on the ConfirmLocationFragment)
  */
 
-public class PictureInfoTagsAdapter extends RecyclerView.Adapter<PictureInfoTagsAdapter.ViewHolder> {
+public class PictureInfoTagsAdapter extends
+        RecyclerView.Adapter<PictureInfoTagsAdapter.ViewHolder> {
 
     private List<String> infoTags;
 

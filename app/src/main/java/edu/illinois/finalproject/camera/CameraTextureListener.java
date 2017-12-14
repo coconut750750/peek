@@ -18,7 +18,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
     private Camera mCamera;
     private TextureView mTextureView;
 
-    public CameraTextureListener(Camera camera, TextureView textureView) {
+    protected CameraTextureListener(Camera camera, TextureView textureView) {
         mCamera = camera;
         mTextureView = textureView;
     }
@@ -128,7 +128,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
      * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-
      * camera-selected-ratio
      *
-     * @param optimalSize
+     * @param optimalSize the optimal size from the getOptimalPreviewSize() method
      */
     private void updateViewSize(Camera.Size optimalSize) {
         // must swap width and height because Camera default orientation is landscape

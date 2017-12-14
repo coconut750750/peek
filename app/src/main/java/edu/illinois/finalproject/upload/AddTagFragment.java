@@ -37,7 +37,8 @@ public class AddTagFragment extends Fragment {
     /**
      * Sets up RecyclerViews, sets up the tags EditTextView, and sets up the ImageView.
      *
-     * @param inflater           passed by Android System, used to inflate the layout for this fragment
+     * @param inflater           passed by Android System, used to inflate the layout for
+     *                           this fragment
      * @param container          passed by Android System
      * @param savedInstanceState passed by Android System
      * @return the fragment view

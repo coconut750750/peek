@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mapButton;
     private Button profileButton;
 
-    private FirebaseAuth mAuth;
-
     /**
      * When the MainActivity is created, configure the menu buttons, specifically, the map and the
      * profile buttons such that when they are clicked, move the view pager to that page. Sets up
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         askForPermissions();
 
         // firebase operations
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         addUserToFirebase(user);
     }
@@ -214,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
      * This method enables the library used to assign fonts to text on runtime
      * Source: https://github.com/chrisjenx/Calligraphy
      *
-     * @param newBase
+     * @param newBase pass by Android System
      */
     @Override
     protected void attachBaseContext(Context newBase) {

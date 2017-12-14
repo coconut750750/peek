@@ -288,7 +288,9 @@ public class UploadActivity extends AppCompatActivity {
                 ProgressDialog.hide();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture = new Picture(uploadLoc, downloadUri, photoCoord, tags, username, timeStamp);
+                Picture capturedPicture = new Picture(uploadLoc, downloadUri, photoCoord,
+                        tags, username, timeStamp);
+
                 photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();

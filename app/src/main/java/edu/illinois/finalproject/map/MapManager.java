@@ -28,11 +28,12 @@ import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
 /**
  * Created by Brandon on 12/3/17.
- * This is a class to Manage the MapView of any activity, but primarily the MapFragment. It creates
- * a GoogleApiClient to get the location and retrieve a Google Map object which will be displayed
- * on a MapView (passed by the activity/fragment that is using this object). It also manages the
- * locations and number of map markers that will be displayed. Finally, it also creates a
- * MapMarkerAdapter which controls the view of the InfoWindow that pops up when a marker is clicked.
+ * This is a class to Manage the MapView of any activity, but primarily the MapFragment and
+ * ConfirmLocationFragment. It creates a GoogleApiClient to get the location and retrieve a
+ * Google Map object which will be displayed on a MapView (passed by the activity/fragment that is
+ * using this object). It also manages the locations and number of map markers that will be
+ * displayed. Finally, it also creates a MapMarkerAdapter which controls the view of the InfoWindow
+ * that pops up when a marker is clicked.
  */
 
 public class MapManager implements GoogleApiClient.ConnectionCallbacks {
@@ -92,7 +93,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      * When the GoogleApiClient is connected, get the last known location. Then, display that
      * location and move the camera to that location.
      *
-     * @param bundle
+     * @param bundle passed by Android System
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -111,9 +112,9 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
                 LatLng currentLatLng = new LatLng(lat, lon);
 
+                gMap.setMyLocationEnabled(true); // displays current location
                 // moves camera of the map to the location of the picture with zoom of DEFAULT_ZOOM
                 // https://developers.google.com/maps/documentation/android-api/map-with-marker
-                gMap.setMyLocationEnabled(true); // displays current location
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
                 for (Picture picture : initialPictures) {
