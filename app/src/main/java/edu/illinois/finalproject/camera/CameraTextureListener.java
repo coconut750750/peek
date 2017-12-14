@@ -25,9 +25,10 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
 
     /**
      * When the surface is available, display the Camera onto the SurfaceTexture object.
+     *
      * @param surfaceTexture the surface that the camera's preview will be displayed onto
-     * @param i an int parameter that is not used by this Object
-     * @param i1 an int parameter that is not used by this Object
+     * @param i              an int parameter that is not used by this Object
+     * @param i1             an int parameter that is not used by this Object
      */
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
@@ -37,6 +38,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
     /**
      * When the surface is destroyed, most likely because the app was closed, release the camera
      * so that the Camera can be used by other apps
+     *
      * @param surfaceTexture the surface texture that was destroyed
      * @return always true because it signals that the camera has been taken care of
      */
@@ -121,7 +123,7 @@ public class CameraTextureListener implements TextureView.SurfaceTextureListener
      * also be adjusted to further avoid distortion. This usually means the TextureView will
      * acquire a width or height larger than the screen size since the available Camera aspect
      * ratios will most likely differ from the screen aspect ratio.
-     *
+     * <p>
      * I found the method to achieve this here:
      * https://stackoverflow.com/questions/29352406/android-full-screen-camera-while-keeping-the-
      * camera-selected-ratio

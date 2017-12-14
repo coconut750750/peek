@@ -159,6 +159,7 @@ public class ProfileFragment extends Fragment {
     /**
      * Sets up SignOut button such that when it is clicked, it logs out of Firebase and out of
      * Google.
+     *
      * @param view the view to retrieve the sign out button from
      */
     private void setupSignOutButton(View view) {

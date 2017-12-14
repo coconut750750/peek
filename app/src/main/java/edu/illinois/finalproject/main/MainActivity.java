@@ -48,12 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * When the MainActivity is created, configure the menu buttons, specifically, the map and the
-     * profile buttons such that when they are clicked, move the view pager to that page. Then,
-     * configure the ViewPager: add an PageSwipeAdapter so each page can be swiped to, add a
-     * PageTransformer to give each swipe an effect, set the current item to the Camera Page, then
-     * add a PageChangeListener for more effects for the buttons. Then, ask the user for the
-     * permissions needed by the app if the user has not already granted them. Finally, add the
-     * user's details into Firebase.
+     * profile buttons such that when they are clicked, move the view pager to that page. Sets up
+     * the ViewPager. Then, ask the user for the permissions needed by the app if the user has not
+     * already granted them. Finally, add the user's details into Firebase.
      *
      * @param savedInstanceState the default Bundle passed by the Android system.
      */
@@ -62,6 +59,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupButtons();
+
+        setupViewpager();
+
+        askForPermissions();
+
+        // firebase operations
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        addUserToFirebase(user);
+    }
+
+    /**
+     * Called by the onCreateMethod to retrieve menu buttons from the layout and set their
+     * OnClickListeners
+     */
+    public void setupButtons() {
         // configure buttons
         mapButton = (Button) findViewById(R.id.map_menu_button);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +92,15 @@ public class MainActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(PROFILE_PAGE, true);
             }
         });
+    }
 
+    /**
+     * Called by the onCreateMethod to retrieve the ViewPager object, add a PageSwipeAdapter to the
+     * ViewPager so each page can be swiped to, add a PageTransformer to give each swipe an effect,
+     * set the current item to the Camera Page, then add a PageChangeListener for more effects for
+     * the buttons.
+     */
+    public void setupViewpager() {
         // configure viewpager
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new PageSwipeAdapter(getSupportFragmentManager()));
@@ -102,13 +124,6 @@ public class MainActivity extends AppCompatActivity {
                 // need to implement but no functionality needed
             }
         });
-
-        askForPermissions();
-
-        // firebase operations
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        addUserToFirebase(user);
     }
 
     /**

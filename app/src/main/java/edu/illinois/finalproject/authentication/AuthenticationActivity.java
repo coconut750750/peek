@@ -2,12 +2,10 @@ package edu.illinois.finalproject.authentication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,10 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -32,13 +27,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 /**
  * This activity is the first activity that will be loaded on the app if the user has not chosen
  * an account to use for this app. It uses Firebase's Google Sign-in method.
- *
+ * <p>
  * Source: https://www.youtube.com/watch?v=MFWZLYFD8yI
  */
 public class AuthenticationActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int SIGN_IN = 1234; // app defined source code
+    private static final int SIGN_IN = 1234; // app defined result code
 
     public static FirebaseAuth mAuth;
     public static FirebaseAuth.AuthStateListener mAuthListener;
@@ -47,7 +42,8 @@ public class AuthenticationActivity extends AppCompatActivity implements
     /**
      * When this activity is created, it configures the Google API Client used to sign in to
      * Firebase with Google.
-     * @param savedInstanceState
+     *
+     * @param savedInstanceState passed by the Android System
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +118,10 @@ public class AuthenticationActivity extends AppCompatActivity implements
     /**
      * This method is called when the user signs into Google. Once the user does, sign into
      * Firebase with that account.
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     *
+     * @param requestCode passed by the Android System, should be the same as the app define integer
+     * @param resultCode  passed by the Android System
+     * @param data        passed by the Android System
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,6 +140,7 @@ public class AuthenticationActivity extends AppCompatActivity implements
     /**
      * This method is called when the user is signed into Google. Using the Google Account, the app
      * signs into Firebase.
+     *
      * @param account
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {

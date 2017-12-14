@@ -76,6 +76,7 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
     /**
      * This method is only called if getInfoWindow() returns null. Since it does not, this method
      * returns null. No functionality is needed other than that.
+     *
      * @return null
      */
     @Override
@@ -85,7 +86,8 @@ public class MapMarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     /**
      * Adds a picture to the pictureHashMap along with the marker id.
-     * @param id String id of the marker that corresponds with the Picture
+     *
+     * @param id      String id of the marker that corresponds with the Picture
      * @param picture the Picture to display
      */
     public void addPicture(String id, Picture picture) {

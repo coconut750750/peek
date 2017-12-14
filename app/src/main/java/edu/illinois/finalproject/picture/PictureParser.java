@@ -135,7 +135,8 @@ public class PictureParser {
 
     /**
      * Inserts picture tags into the layout, using the PictureInfoTagsAdapter
-     * @param tags list of tags of picture
+     *
+     * @param tags            list of tags of picture
      * @param pictureInfoView the info view for the picture
      */
     private static void insertPicTags(List<String> tags, View pictureInfoView) {

@@ -123,6 +123,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     /**
      * Adds a tag to the tags list if the tag is a nonnull tag not already in the list
+     *
      * @param tag
      */
     public void addTags(String tag) {

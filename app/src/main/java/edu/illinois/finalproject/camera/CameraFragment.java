@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -27,7 +26,7 @@ import static android.content.Context.MODE_PRIVATE;
  * This is one of the main Fragments the user will see. It holds a Camera object as well as a
  * TextureView, the view where the Camera's preview will be displayed. This Fragment has a
  * CameraTextureListener object that draws the Camera's preview onto the TextureView.
- *
+ * <p>
  * Source: http://www.tutorialspoint.com/android/android_textureview.htm
  * I used this source to figure out how to use a TextureView to display a Camera.
  */
@@ -86,8 +85,8 @@ public class CameraFragment extends Fragment {
      * When this Fragment is created, retrieve the views from the layout. Assign an OnClickListener
      * to the button.
      *
-     * @param inflater Object used to inflate the layout
-     * @param container the Container the Fragment will reside in
+     * @param inflater           Object used to inflate the layout
+     * @param container          the Container the Fragment will reside in
      * @param savedInstanceState the saved state
      * @return the view of the Fragment
      */

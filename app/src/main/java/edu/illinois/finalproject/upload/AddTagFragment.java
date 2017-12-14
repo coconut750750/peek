@@ -12,8 +12,6 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.util.List;
-
 import edu.illinois.finalproject.R;
 
 /**

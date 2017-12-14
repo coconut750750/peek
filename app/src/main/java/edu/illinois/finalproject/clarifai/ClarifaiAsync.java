@@ -2,7 +2,6 @@ package edu.illinois.finalproject.clarifai;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -41,8 +40,9 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
     /**
      * This is the background thread that will make requests to Clarifai. Given a bitmap, it will
      * ask Clarifai to predict the subjects of that bitmap. Then, it will return the results
-     * @param bitmaps
-     * @return
+     *
+     * @param bitmaps list of bitmaps to request the API on
+     * @return the list of predictions from Clarifai
      */
     @Override
     protected List<String> doInBackground(Bitmap... bitmaps) {
@@ -77,7 +77,8 @@ public class ClarifaiAsync extends AsyncTask<Bitmap, Integer, List<String>> {
     /**
      * Once the requests have been made, add the list of results to the TagsAdapter, which will
      * display to the user the results from Clarifai.
-     * @param results
+     *
+     * @param results the results from Clarifai
      */
     @Override
     protected void onPostExecute(List<String> results) {

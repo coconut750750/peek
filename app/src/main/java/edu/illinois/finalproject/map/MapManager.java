@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -57,8 +56,9 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
      * call the constructor with only a mapView as a parameter. This constructor also takes in a
      * list of intialPictures. These Picture objects will be immediately added to the map and their
      * info windows will immediately be shown.
-     * @param mapView
-     * @param initialPictures
+     *
+     * @param mapView         the MapView to display the GoogleMap onto
+     * @param initialPictures the list of pictures to display immediately when map is loaded
      */
     public MapManager(MapView mapView, List<Picture> initialPictures) {
         this(mapView);

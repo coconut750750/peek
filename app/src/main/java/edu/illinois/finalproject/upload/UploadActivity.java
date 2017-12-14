@@ -1,7 +1,6 @@
 package edu.illinois.finalproject.upload;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -37,9 +36,9 @@ import java.util.Locale;
 
 import edu.illinois.finalproject.R;
 import edu.illinois.finalproject.clarifai.ClarifaiAsync;
-import edu.illinois.finalproject.picture.Picture;
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.main.ProgressDialog;
+import edu.illinois.finalproject.picture.Picture;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -169,6 +168,7 @@ public class UploadActivity extends AppCompatActivity {
     /**
      * Replaces the fragment being displayed by the activity to whichever fragment corresponds to
      * the currentPage
+     *
      * @param fragment the new fragment to display
      */
     public void commitFragment(Fragment fragment) {
@@ -214,7 +214,7 @@ public class UploadActivity extends AppCompatActivity {
                 break;
             case 1:
                 // show a progress dialog to users
-                ProgressDialog.show(this, getResources().getString(R.string.uploading) );
+                ProgressDialog.show(this, getResources().getString(R.string.uploading));
                 uploadPictureToFirebase();
                 break;
         }
@@ -251,6 +251,7 @@ public class UploadActivity extends AppCompatActivity {
      * This method is used to incoporate the Calligraphy library into the app. Allows developer
      * to specify the font in the XML layout file.
      * Source: https://github.com/chrisjenx/Calligraphy
+     *
      * @param newBase passed by the Android system
      */
     @Override
@@ -270,7 +271,7 @@ public class UploadActivity extends AppCompatActivity {
         final DatabaseReference photoRef = FirebaseDatabase.getInstance()
                 .getReference(PHOTOS_REF).push();
         final String photoId = photoRef.getKey();
-        final String uploadLoc = String.format("%s/%s.jpg", userId,  photoId);
+        final String uploadLoc = String.format("%s/%s.jpg", userId, photoId);
 
         // put photo into storage
         StorageReference uploadRef = FirebaseStorage.getInstance().getReference().child(uploadLoc);
@@ -287,7 +288,7 @@ public class UploadActivity extends AppCompatActivity {
                 ProgressDialog.hide();
 
                 String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                Picture capturedPicture =  new Picture(uploadLoc, downloadUri, photoCoord, tags, username, timeStamp);
+                Picture capturedPicture = new Picture(uploadLoc, downloadUri, photoCoord, tags, username, timeStamp);
                 photoRef.setValue(capturedPicture);
                 // once all data of picture is aggregated, finish the upload activity
                 finish();
@@ -312,6 +313,7 @@ public class UploadActivity extends AppCompatActivity {
     /**
      * Aggregates the selected tags from the clarifaiTagsAdapter and the customTagsAdapter. Removes
      * repeated tags between the two lists.
+     *
      * @return a list of all the tags the user has selected.
      */
     public List<String> getSelectedTags() {
