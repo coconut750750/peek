@@ -12,6 +12,8 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import edu.illinois.finalproject.R;
 
 /**
@@ -97,9 +99,9 @@ public class AddTagFragment extends Fragment {
         submitTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String customTag = tagsEdit.getText().toString();
-                if (!"".equals(customTag)) {
-                    customTagsAdapter.addTags(customTag);
+                String[] customTags = tagsEdit.getText().toString().split(" ");
+                for (String tag : customTags) {
+                    customTagsAdapter.addTags(tag);
                     customTagsAdapter.notifyDataSetChanged();
                     tagsEdit.setText("");
                 }

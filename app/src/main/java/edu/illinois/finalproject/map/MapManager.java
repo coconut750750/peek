@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -14,6 +15,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import edu.illinois.finalproject.main.MainActivity;
 import edu.illinois.finalproject.picture.Picture;
@@ -44,6 +49,21 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
     private GoogleMap gMap;
 
     private MapMarkerAdapter mapMarkerAdapter;
+
+    private List<Picture> initialPictures = new ArrayList<>();
+
+    /**
+     * When creating a MapManager, a MapView is needed to display the Map on. This constructor will
+     * call the constructor with only a mapView as a parameter. This constructor also takes in a
+     * list of intialPictures. These Picture objects will be immediately added to the map and their
+     * info windows will immediately be shown.
+     * @param mapView
+     * @param initialPictures
+     */
+    public MapManager(MapView mapView, List<Picture> initialPictures) {
+        this(mapView);
+        this.initialPictures = initialPictures;
+    }
 
     /**
      * When creating a new MapManager, a MapView is needed to display the Map on. Also a context is
@@ -82,12 +102,25 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
             Location lastLoc = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
             if (lastLoc != null) {
-                LatLng currentLatLng = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
+                double lat = lastLoc.getLatitude();
+                double lon = lastLoc.getLongitude();
+
+                HashMap<String, Double> latLngMap = new HashMap<>();
+                latLngMap.put(LATITUDE, lat);
+                latLngMap.put(LONGITUDE, lon);
+
+                LatLng currentLatLng = new LatLng(lat, lon);
 
                 // moves camera of the map to the location of the picture with zoom of DEFAULT_ZOOM
                 // https://developers.google.com/maps/documentation/android-api/map-with-marker
                 gMap.setMyLocationEnabled(true); // displays current location
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+
+                for (Picture picture : initialPictures) {
+                    picture.setCoord(latLngMap);
+                    Marker pictureMarker = displayPicture(picture);
+                    pictureMarker.showInfoWindow();
+                }
             }
         }
     }
@@ -117,6 +150,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
                 gMap.getUiSettings().setMyLocationButtonEnabled(false);
                 gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 gMap.setInfoWindowAdapter(mapMarkerAdapter);
+
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     private Marker lastOpenned = null;
 
@@ -154,11 +188,11 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
 
     /**
      * Takes in a Picture object and displays it on the map by creating a new Marker at the location
-     * of the Picture and then adding the Picture along with the marker ID to the MarkerAdatper.
+     * of the Picture and then adding the Picture along with the marker ID to the MarkerAdapter.
      *
      * @param picture the Picture object to display.
      */
-    public void displayPicture(Picture picture) {
+    public Marker displayPicture(Picture picture) {
         LatLng location = new LatLng(picture.getCoord().get(LATITUDE),
                 picture.getCoord().get(LONGITUDE));
 
@@ -166,5 +200,7 @@ public class MapManager implements GoogleApiClient.ConnectionCallbacks {
         currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
 
         mapMarkerAdapter.addPicture(currentMarker.getId(), picture);
+
+        return currentMarker;
     }
 }

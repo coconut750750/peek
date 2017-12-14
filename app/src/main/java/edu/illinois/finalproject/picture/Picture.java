@@ -38,14 +38,12 @@ public class Picture {
      */
     public Picture(String storageLocation, String uri, LatLng coord, List<String> tags, String name,
                    String datetime) {
-        this.storageLocation = storageLocation;
-        this.uri = uri;
-        this.tags = tags;
-        this.name = name;
-        this.datetime = datetime;
+        this(tags, name, datetime);
         this.coord = new HashMap<>();
         this.coord.put(LATITUDE, coord.latitude);
         this.coord.put(LONGITUDE, coord.longitude);
+        this.storageLocation = storageLocation;
+        this.uri = uri;
     }
 
     /**
@@ -58,7 +56,12 @@ public class Picture {
      * @param datetime string when the picture was taken
      */
     public Picture(Bitmap bitmap, List<String> tags, String name, String datetime) {
+        this(tags, name, datetime);
         this.bitmap = bitmap;
+
+    }
+
+    public Picture(List<String> tags, String name, String datetime) {
         this.tags = tags;
         this.name = name;
         this.datetime = datetime;
@@ -94,5 +97,9 @@ public class Picture {
 
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    public void setCoord(HashMap<String, Double> coord) {
+        this.coord = coord;
     }
 }

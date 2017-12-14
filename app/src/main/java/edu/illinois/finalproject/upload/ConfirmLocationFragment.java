@@ -1,56 +1,50 @@
 package edu.illinois.finalproject.upload;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.illinois.finalproject.R;
+import edu.illinois.finalproject.map.MapManager;
 import edu.illinois.finalproject.picture.Picture;
-import edu.illinois.finalproject.main.MainActivity;
-import edu.illinois.finalproject.map.MapMarkerAdapter;
-
-import static edu.illinois.finalproject.upload.UploadActivity.DEFAULT_ZOOM;
 
 /**
- *
+ * The second Fragment to be displayed in the Upload Activity. It displays the Picture Object that
+ * they have created on the map to confirm that everything on it is correct. This method uses a
+ * MapManager to display the single Picture Object being uploaded.
  */
-public class ConfirmLocationFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks {
+public class ConfirmLocationFragment extends Fragment {
 
+    // keys used in the Bundle that can be retrieved from getArguments()
     public static final String NAME_KEY = "name";
     public static final String DATETIME_KEY = "datetime";
 
     private MapView mapView;
-    private Context context;
-    private GoogleApiClient googleApiClient;
-    private GoogleMap gMap;
     private Bitmap capturedBitmap;
-    public static final float INFO_WINDOW_OFFSET = 0.1f;
-    public static final float INFO_WINDOW_X = 0.5f;
-    public static final float INFO_WINDOW_Y = -1 + INFO_WINDOW_OFFSET;
+
+    private MapManager mapManager;
 
     public ConfirmLocationFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * When creating a new ConfirmLocationFragment, a name and a datetime is needed to create a
+     * Picture Object. These arguments are sent through the Upload activity and will be used
+     * to create an object to be displayed on the map.
+     *
+     * @param name     name of uploader (which will be the current user)
+     * @param datetime the current time
+     * @return a ConfirmLocationFragment that the activity can use
+     */
     public static ConfirmLocationFragment newInstance(String name, String datetime) {
         Bundle args = new Bundle();
         args.putString(NAME_KEY, name);
@@ -61,70 +55,53 @@ public class ConfirmLocationFragment extends Fragment implements GoogleApiClient
         return fragment;
     }
 
+    /**
+     * When this Fragment created, it retrieves the capturedBitmap from the UploadActivity.
+     *
+     * @param savedInstanceState passed by the Android system
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.context = getContext();
 
-        googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
         capturedBitmap = ((UploadActivity) getActivity()).getCapturedBitmap();
     }
 
+    /**
+     * When this Fragment's View is being created, inflate the layout, retrieve the mapview,
+     * and instantiate a MapManager to display the upload Picture.
+     *
+     * @param inflater           passed by the Android system, used to inflate the fragment layout
+     * @param container          passed by the Android system
+     * @param savedInstanceState passed by the Android system
+     * @return the view of the Fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upload_location, container, false);
 
         mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                gMap = googleMap;
-                gMap.getUiSettings().setMyLocationButtonEnabled(false);
-                gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            }
-        });
-        mapView.onResume();
+
+        List<Picture> displayPics = new ArrayList<>();
+        displayPics.add(getDisplayPicture());
+        mapManager = new MapManager(mapView, displayPics);
+        mapManager.startMap(savedInstanceState);
 
         return view;
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (MainActivity.fineLocationPermission || MainActivity.coarseLocationPermission) {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (lastLocation != null) {
-                LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
-
-                addMarker(location);
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // need to implement but no functionality needed
-    }
-
-    private void addMarker(LatLng location) {
-        Marker currentMarker = gMap.addMarker(new MarkerOptions().position(location));
-        currentMarker.setInfoWindowAnchor(INFO_WINDOW_X, INFO_WINDOW_Y);
-
-        List<String> tags = ((UploadActivity)getActivity()).getSelectedTags();
+    /**
+     * Creates a temporary Picture Object that the mapManager can display to the map
+     *
+     * @return an incomplete Picture Object constructed from the arguments passed by the
+     * UploadActivity
+     */
+    public Picture getDisplayPicture() {
+        List<String> tags = ((UploadActivity) getActivity()).getSelectedTags();
         String name = getArguments().getString(NAME_KEY);
         String datetime = getArguments().getString(DATETIME_KEY);
 
-        Picture displayPicture = new Picture(capturedBitmap, tags, name, datetime);
-
-        MapMarkerAdapter mapMarkerAdapter = new MapMarkerAdapter(context);
-        mapMarkerAdapter.addPicture(currentMarker.getId(), displayPicture);
-        gMap.setInfoWindowAdapter(mapMarkerAdapter);
-
-        currentMarker.showInfoWindow();
+        return new Picture(capturedBitmap, tags, name, datetime);
     }
 }

@@ -47,12 +47,18 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * with a marker at the location where the photo was taken and the actual photo itself.
  */
 public class UploadActivity extends AppCompatActivity {
+    // the format of the datetime that will be uploaded to firebase
     public static final String DATA_FORMAT = "dd MMMM yyyy_hh:mm a";
 
+    // firebase node of all pictures
     public static final String PHOTOS_REF = "photo_ids";
+    // firebase node of the user's list of photo ids
     public static final String USER_PHOTOS_REF = "user_photos";
+    // the key used to access the captured photo
     public static final String CAPTURED_PHOTO_NAME = "photoName";
+    // default zoom of the map
     public static final int DEFAULT_ZOOM = 15;
+
     private TagsAdapter clarifaiTagsAdapter;
     private TagsAdapter customTagsAdapter;
     private TextView toolbarTitle;
@@ -82,20 +88,35 @@ public class UploadActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        Intent passedIntent = getIntent();
-        String photoName = passedIntent.getStringExtra(CAPTURED_PHOTO_NAME);
-        String photoPath = getFileStreamPath(photoName).getPath();
-
         // get image
         // need to rotate image 90 degrees because camera saves image in landscape mode by default
+        String photoName = getIntent().getStringExtra(CAPTURED_PHOTO_NAME);
+        String photoPath = getFileStreamPath(photoName).getPath();
         capturedBitmap = rotateImage(BitmapFactory.decodeFile(photoPath));
 
         // delete the file from SD card
-        File photoFile = new File(photoPath);
-        photoFile.delete();
+        new File(photoPath).delete();
 
-        // get current location
-        // https://developer.android.com/training/location/retrieve-current.html
+        getLocation();
+        getUserInfo();
+        getClarifaiPredictions();
+
+        // get datetime
+        timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH).format(new Date());
+
+        // create custom tag adapter
+        customTagsAdapter = new TagsAdapter(this, true);
+
+        // get fragments
+        tagFragment = new AddTagFragment();
+        locationFragment = ConfirmLocationFragment.newInstance(username, timeStamp);
+        commitFragment(tagFragment);
+    }
+
+    /**
+     * Gets to geographic location of the user.
+     */
+    public void getLocation() {
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (MainActivity.fineLocationPermission || MainActivity.coarseLocationPermission) {
@@ -110,51 +131,29 @@ public class UploadActivity extends AppCompatActivity {
                         }
                     });
         }
-
-        // get datetime
-        timeStamp = new SimpleDateFormat(DATA_FORMAT, Locale.ENGLISH)
-                .format(new Date());
-
-        // get user info
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
-        username = user.getDisplayName();
-
-        // get tags from clarifai
-        clarifaiTagsAdapter = new TagsAdapter(this, false);
-        clarifaiAsync = new ClarifaiAsync(clarifaiTagsAdapter);
-        clarifaiAsync.execute(capturedBitmap);
-
-        // create custom tag adapter
-        customTagsAdapter = new TagsAdapter(this, true);
-
-        // get fragments
-        tagFragment = new AddTagFragment();
-        locationFragment = ConfirmLocationFragment.newInstance(username, timeStamp);
-        commitFragment(tagFragment);
-    }
-
-    public TagsAdapter getClarifaiTagsAdapter() {
-        return clarifaiTagsAdapter;
-    }
-
-    public TagsAdapter getCustomTagsAdapter() {
-        return customTagsAdapter;
-    }
-
-    public List<String> getSelectedTags() {
-        List<String> allTags = new ArrayList<>(clarifaiTagsAdapter.getClickedTags());
-        allTags.addAll(customTagsAdapter.getClickedTags());
-        return allTags;
-    }
-
-    public Bitmap getCapturedBitmap() {
-        return capturedBitmap;
     }
 
     /**
-     * Rotates a bitmap 90 degrees since camera saves image in landscape mode. Source:
-     * https://stackoverflow.com/questions/9015372/how-to-rotate-a-bitmap-90-degrees
+     * Gets the users info from FirebaseAuth.
+     */
+    public void getUserInfo() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
+        username = user.getDisplayName();
+    }
+
+    /**
+     * Creates a clarifaiTagsAdapter and executes a ClarifaiAsyncTask passing in the capturedBitmap
+     */
+    public void getClarifaiPredictions() {
+        clarifaiTagsAdapter = new TagsAdapter(this, false);
+        clarifaiAsync = new ClarifaiAsync(clarifaiTagsAdapter);
+        clarifaiAsync.execute(capturedBitmap);
+    }
+
+    /**
+     * Rotates a bitmap 90 degrees since camera saves image in landscape mode.
+     * Source: https://stackoverflow.com/questions/9015372/how-to-rotate-a-bitmap-90-degrees
      *
      * @param source the original bitmap from the file
      * @return a bitmap that is rotated to portrait mode
@@ -167,6 +166,11 @@ public class UploadActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    /**
+     * Replaces the fragment being displayed by the activity to whichever fragment corresponds to
+     * the currentPage
+     * @param fragment the new fragment to display
+     */
     public void commitFragment(Fragment fragment) {
         transaction = getSupportFragmentManager().beginTransaction();
         if (currentPage == 0) {
@@ -179,6 +183,10 @@ public class UploadActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    /**
+     * When the back button is pressed, if current page is 0, then this activity should be
+     * destroyed. If not, replace the current fragment to the AddTagFragment.
+     */
     public void onBackButtonPressed() {
         switch (currentPage) {
             case 0:
@@ -194,6 +202,10 @@ public class UploadActivity extends AppCompatActivity {
         currentPage -= 1;
     }
 
+    /**
+     * When the back button is pressed, if current page is 0, then replace the current fragment
+     * with the the ConfirmLocationFragment. If the page is 1, upload the picture to Firebase.
+     */
     public void onNextButtonPressed() {
         switch (currentPage) {
             case 0:
@@ -210,7 +222,7 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * sets up a custom Toolbar and configures the buttons with onClickListeners.
      */
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -236,14 +248,23 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     /**
-     * https://github.com/chrisjenx/Calligraphy
-     * @param newBase
+     * This method is used to incoporate the Calligraphy library into the app. Allows developer
+     * to specify the font in the XML layout file.
+     * Source: https://github.com/chrisjenx/Calligraphy
+     * @param newBase passed by the Android system
      */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    /**
+     * Puts everything together and uploads the picture to Firebase. First, retrieve the
+     * storage location of the picture. Then, upload the picture to that location. When the upload
+     * is complete, create a new Picture object with all of the parameters and push it to Firebase.
+     * Finally, add the photo's id, which was generated when pushing to Firebase, to the list of
+     * photoId's that the user has.
+     */
     private void uploadPictureToFirebase() {
         // get photo id and user info
         final DatabaseReference photoRef = FirebaseDatabase.getInstance()
@@ -260,8 +281,7 @@ public class UploadActivity extends AppCompatActivity {
 
         // create picture object to upload to firebase
         final List<String> tags = getSelectedTags();
-        uploadRef.putBytes(imageData)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        uploadRef.putBytes(imageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 ProgressDialog.hide();
@@ -279,5 +299,32 @@ public class UploadActivity extends AppCompatActivity {
                 .getReference(USER_PHOTOS_REF)
                 .child(userId);
         userPhotoRef.push().setValue(photoId);
+    }
+
+    public TagsAdapter getClarifaiTagsAdapter() {
+        return clarifaiTagsAdapter;
+    }
+
+    public TagsAdapter getCustomTagsAdapter() {
+        return customTagsAdapter;
+    }
+
+    /**
+     * Aggregates the selected tags from the clarifaiTagsAdapter and the customTagsAdapter. Removes
+     * repeated tags between the two lists.
+     * @return a list of all the tags the user has selected.
+     */
+    public List<String> getSelectedTags() {
+        List<String> allTags = new ArrayList<>(clarifaiTagsAdapter.getClickedTags());
+        for (String tag : customTagsAdapter.getClickedTags()) {
+            if (!allTags.contains(tag)) {
+                allTags.add(tag);
+            }
+        }
+        return allTags;
+    }
+
+    public Bitmap getCapturedBitmap() {
+        return capturedBitmap;
     }
 }

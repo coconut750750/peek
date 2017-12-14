@@ -15,6 +15,8 @@ import edu.illinois.finalproject.R;
 
 /**
  * Created by Brandon on 12/4/17.
+ * This is an Adapter class used to control the tags provided by Clarifai and the tags created by
+ * the user themselves. It has a list of tags and a list of clickedTags.
  */
 
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
@@ -24,6 +26,14 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     private Context context;
     private boolean defaultClicked;
 
+    /**
+     * The constructor of the Adapter
+     *
+     * @param context        the context of the Activity using this adapter
+     * @param defaultClicked the default state of a tag. If false, the tag will be black and wont
+     *                       be added to the clickedTags list; otherwise, the tag will be accented
+     *                       and will be added to the clickedTags list.
+     */
     public TagsAdapter(Context context, boolean defaultClicked) {
         this.context = context;
         this.clickedTags = new ArrayList<>();
@@ -36,6 +46,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         public TextView textView;
         private boolean clicked;
 
+        /**
+         * Constructor of the tag ViewHolder. Gets the textView for the tag, sets the
+         * onClickListener to the itemView. Then, if the adapter forces new tags to be clicked by
+         * default, make this tag accented, and add it to the list of clickedTags
+         *
+         * @param itemView the view of a single tag
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tag_view);
@@ -46,6 +63,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                     clickTag();
                 }
             });
+
             if (defaultClicked) {
                 clicked = !clicked;
                 textView.setTextColor(context.getColor(R.color.colorAccent));
@@ -56,8 +74,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             }
         }
 
+        /**
+         * When a tag is clicked, get the tag from the list of tags. If not already clicked, set
+         * the color to the accent color and add the tag to the clickedTags list; otherwise, set
+         * the color to black and remove the tag from the clickTags list.
+         */
         public void clickTag() {
-            String tag = tags.get(getPosition());
+            String tag = tags.get(getAdapterPosition());
             clicked = !clicked;
             if (clicked) {
                 textView.setTextColor(context.getColor(R.color.colorAccent));
@@ -81,6 +104,12 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         return new ViewHolder(cardView);
     }
 
+    /**
+     * Sets the textView of the ViewHolder to the String tag
+     *
+     * @param holder   the ViewHolder being binded
+     * @param position position of the Viewholder
+     */
     @Override
     public void onBindViewHolder(TagsAdapter.ViewHolder holder, int position) {
         TextView textView = holder.textView;
@@ -93,6 +122,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
     /**
+     * Adds a tag to the tags list if the tag is a nonnull tag not already in the list
      * @param tag
      */
     public void addTags(String tag) {
