@@ -32,19 +32,18 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import edu.illinois.finalproject.R;
-import edu.illinois.finalproject.picture.Picture;
 import edu.illinois.finalproject.main.ProgressDialog;
+import edu.illinois.finalproject.picture.Picture;
 
 import static edu.illinois.finalproject.authentication.AuthenticationActivity.mGoogleApiClient;
 import static edu.illinois.finalproject.upload.UploadActivity.PHOTOS_REF;
 import static edu.illinois.finalproject.upload.UploadActivity.USER_PHOTOS_REF;
 
 /**
- *
+ * The Profile Fragment used by the MainActivity. It controls the display of the pictures uploaded
+ * by the current user by using a UserUploadsAdapter. It also has a button to log out of the app.
  */
 public class ProfileFragment extends Fragment {
-
-    public static final String URI_KEY = "uri";
 
     private FirebaseUser user;
     private UserUploadsAdapter postsAdapter;
@@ -54,12 +53,27 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * When Fragment is created, instantiates the user instance variable
+     *
+     * @param savedInstanceState passed by the Android System
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    /**
+     * When the View is created, sets up toolbar, instantiates the TextView, numPostsView, sets up
+     * the profile image using the Glide Library, sets up Recycler view for the pictures, retrieve
+     * the Picture URIs from Firebase, and finally sets up the Sign out button
+     *
+     * @param inflater           the LayoutInflater used to create a View from a Layout resource
+     * @param container          passed by the Android System
+     * @param savedInstanceState passed by the Android System
+     * @return the view to display
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,21 +95,23 @@ public class ProfileFragment extends Fragment {
         RecyclerView postRecyclerView = (RecyclerView) view.findViewById(R.id.posts_recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         postRecyclerView.setLayoutManager(layoutManager);
-        postsAdapter = new UserUploadsAdapter(getContext());
+        postsAdapter = new UserUploadsAdapter();
         postRecyclerView.setAdapter(postsAdapter);
 
-        // retrieve firebase uris
+        // retrieve Firebase URIs. When retrieved, add the Picture object to the Adapter
         DatabaseReference uploadsRef = FirebaseDatabase.getInstance().getReference(USER_PHOTOS_REF)
                 .child(user.getUid());
         uploadsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<HashMap<String, String>> t =
-                        new GenericTypeIndicator<HashMap<String, String>>() {};
-                HashMap<String, String> userPhotos = dataSnapshot.getValue(t);
+                GenericTypeIndicator<HashMap<String, String>> typeIndicator =
+                        new GenericTypeIndicator<HashMap<String, String>>() {
+                        };
+
+                HashMap<String, String> userPhotos = dataSnapshot.getValue(typeIndicator);
                 if (userPhotos != null) {
                     for (String uid : userPhotos.keySet()) {
-                        getImageBitmap(userPhotos.get(uid));
+                        addImageToAdapter(userPhotos.get(uid));
                     }
                 }
             }
@@ -112,7 +128,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void getImageBitmap(String imageId) {
+    /**
+     * Given a ImageId, retrieve the Picture Object from Firebase, then adds that Picture Object
+     * to the postsAdatper.
+     *
+     * @param imageId the firebase generate ID of a picture
+     */
+    private void addImageToAdapter(String imageId) {
         DatabaseReference imageRef = FirebaseDatabase.getInstance().getReference(PHOTOS_REF)
                 .child(imageId);
         imageRef.addValueEventListener(new ValueEventListener() {
@@ -123,7 +145,8 @@ public class ProfileFragment extends Fragment {
                 postsAdapter.addImages(picture);
                 postsAdapter.notifyDataSetChanged();
 
-                numPostsView.setText(String.format(Locale.ENGLISH, "%d", postsAdapter.getItemCount()));
+                numPostsView.setText(String.
+                        format(Locale.ENGLISH, "%d", postsAdapter.getItemCount()));
             }
 
             @Override
@@ -133,6 +156,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up SignOut button such that when it is clicked, it logs out of Firebase and out of
+     * Google.
+     * @param view the view to retrieve the sign out button from
+     */
     private void setupSignOutButton(View view) {
         view.findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
             @Override
